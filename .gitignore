@@ -1,4 +1,3 @@
-
 # Ignore user-specific files
 .vscode/
 *.VC.db
@@ -13,6 +12,21 @@
 *.pdb
 
 # Ignore compiled assets
+=======
+# UE-specific
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+.vs/
+.vscode/
+*.sln
+*.VC.db
+*.opensdf
+*.log
+*.vsconfig
+# Ignore built data
+*.pdb
 *.obj
 *.exe
 *.dll
@@ -47,3 +61,11 @@
 /Saved/
 /DerivedDataCache/
 
+=======
+
+# Optional
+.DS_Store
+Thumbs.db
+.vs/
+.idea/
+.vsconfig/
