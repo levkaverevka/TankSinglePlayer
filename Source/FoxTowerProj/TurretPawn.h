@@ -19,8 +19,11 @@ class FOXTOWERPROJ_API ATurretPawn : public APawn
 public:
 	ATurretPawn();
 
+	/*virtual void Tick(float DeltaTime) override;
+
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;*/
+
 protected:
-	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Capsule Component")
 	TObjectPtr<UCapsuleComponent> CapsuleComponent;
@@ -33,10 +36,5 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Turret Mesh Component")
 	TObjectPtr<USceneComponent> ProjectileSpawnComponent;
-
-public:	
-	virtual void Tick(float DeltaTime) override;
-
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 };
