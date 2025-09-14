@@ -23,19 +23,34 @@ ATurretPawn::ATurretPawn()
 
 	ProjectileSpawnComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile Spawn Component"));
 	ProjectileSpawnComponent->SetupAttachment(CapsuleComponent);
+
 }
 
-// Called every frame
-//void ATurretPawn::Tick(float DeltaTime)
-//{
-//	Super::Tick(DeltaTime);
-//
-//}
-//
-//// Called to bind functionality to input
-//void ATurretPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-//{
-////	Super::SetupPlayerInputComponent(PlayerInputComponent);
-//
-//}
+void ATurretPawn::BeginPlay()
+{
+	PostInitComponents(BaseMesh);
+	PostInitComponents(TurretMesh);
+}
 
+TArray<FName> ATurretPawn::GetMaterialSlotOptions()
+{
+	return
+	{
+		FName("Team_Material"),
+		FName("_Base_Material")
+	};
+		
+}
+
+void ATurretPawn::PostInitComponents(UStaticMeshComponent* Mesh)
+{
+	int32 SlotIndex = Mesh->GetMaterialIndex(TeamMaterialSlotName);
+	if (SlotIndex != INDEX_NONE)
+	{
+		Dynamic_MI_Ref = Mesh->CreateAndSetMaterialInstanceDynamic(SlotIndex);
+		if (Dynamic_MI_Ref)
+		{
+			Dynamic_MI_Ref->SetVectorParameterValue(MaterialParameterName, TeamMaterialColor);
+		}
+	}
+}
