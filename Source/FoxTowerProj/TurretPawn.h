@@ -23,18 +23,16 @@ public:
 protected:
 
 
-	virtual void BeginPlay() override;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Capsule Component")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Capsule Component")
 	TObjectPtr<UCapsuleComponent> CapsuleComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Base Mesh")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Base Mesh")
 	TObjectPtr<UStaticMeshComponent> BaseMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Turret Mesh Component")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret Mesh Component")
 	TObjectPtr<UStaticMeshComponent> TurretMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Turret Mesh Component")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret Mesh Component")
 	TObjectPtr<USceneComponent> ProjectileSpawnComponent;
 
 	UPROPERTY()
@@ -53,7 +51,6 @@ protected:
 	static TArray<FName> GetMaterialSlotOptions();
 
 	UFUNCTION()
-	void PostInitComponents(UStaticMeshComponent* Mesh);
-
+	virtual void PostInitializeComponents() override;
 
 };

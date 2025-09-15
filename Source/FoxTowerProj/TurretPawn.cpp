@@ -26,11 +26,6 @@ ATurretPawn::ATurretPawn()
 
 }
 
-void ATurretPawn::BeginPlay()
-{
-	PostInitComponents(BaseMesh);
-	PostInitComponents(TurretMesh);
-}
 
 TArray<FName> ATurretPawn::GetMaterialSlotOptions()
 {
@@ -42,15 +37,22 @@ TArray<FName> ATurretPawn::GetMaterialSlotOptions()
 		
 }
 
-void ATurretPawn::PostInitComponents(UStaticMeshComponent* Mesh)
+void ATurretPawn::PostInitializeComponents()
 {
-	int32 SlotIndex = Mesh->GetMaterialIndex(TeamMaterialSlotName);
-	if (SlotIndex != INDEX_NONE)
-	{
-		Dynamic_MI_Ref = Mesh->CreateAndSetMaterialInstanceDynamic(SlotIndex);
-		if (Dynamic_MI_Ref)
+	Super::PostInitializeComponents();
+
+	auto ApplyTeamColor = [&](UStaticMeshComponent* Mesh)
 		{
-			Dynamic_MI_Ref->SetVectorParameterValue(MaterialParameterName, TeamMaterialColor);
-		}
-	}
+			int32 SlotIndex = Mesh->GetMaterialIndex(TeamMaterialSlotName);
+			if (SlotIndex != INDEX_NONE)
+			{
+				Dynamic_MI_Ref = Mesh->CreateAndSetMaterialInstanceDynamic(SlotIndex);
+				if (Dynamic_MI_Ref)
+				{
+					Dynamic_MI_Ref->SetVectorParameterValue(MaterialParameterName, TeamMaterialColor);
+				}
+			}
+		};
+	ApplyTeamColor(BaseMesh);
+	ApplyTeamColor(TurretMesh);
 }
