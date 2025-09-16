@@ -10,8 +10,9 @@ class UCapsuleComponent;
 class StaticMeshComponent;
 class USceneComponent;
 class UInputComponent;
+class UMaterialInstanceDynamic;
 
-UCLASS()
+UCLASS(ABSTRACT)
 class FOXTOWERPROJ_API ATurretPawn : public APawn
 {
 	GENERATED_BODY()
@@ -19,22 +20,37 @@ class FOXTOWERPROJ_API ATurretPawn : public APawn
 public:
 	ATurretPawn();
 
-	/*virtual void Tick(float DeltaTime) override;
-
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;*/
+	UFUNCTION()
+	virtual void PostInitializeComponents() override;
 
 protected:
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Capsule Component")
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UCapsuleComponent> CapsuleComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Base Mesh")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UStaticMeshComponent> BaseMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Turret Mesh Component")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UStaticMeshComponent> TurretMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Turret Mesh Component")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<USceneComponent> ProjectileSpawnComponent;
+
+	UPROPERTY()
+	TObjectPtr<UMaterialInstanceDynamic> Dynamic_MI_Ref;
+
+	UPROPERTY(EditAnywhere, Category = "Team", meta = (GetOptions = "GetMaterialSlotOptions"))
+	FName TeamMaterialSlotName;
+
+	UPROPERTY(EditAnywhere, Category = "Team")
+	FName MaterialParameterName;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Team")
+	FLinearColor TeamMaterialColor = FLinearColor::White;
+
+	UFUNCTION()
+	static TArray<FName> GetMaterialSlotOptions();
 
 };
