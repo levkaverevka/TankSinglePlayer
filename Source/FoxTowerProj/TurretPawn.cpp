@@ -41,7 +41,7 @@ void ATurretPawn::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-	auto ApplyTeamColor = [&](UStaticMeshComponent* Mesh)
+	auto ApplyTeamColor = [this](UStaticMeshComponent* Mesh)
 		{
 			int32 SlotIndex = Mesh->GetMaterialIndex(TeamMaterialSlotName);
 			if (SlotIndex != INDEX_NONE)

@@ -20,19 +20,22 @@ class FOXTOWERPROJ_API ATurretPawn : public APawn
 public:
 	ATurretPawn();
 
+	UFUNCTION()
+	virtual void PostInitializeComponents() override;
+
 protected:
 
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Capsule Component")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UCapsuleComponent> CapsuleComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Base Mesh")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UStaticMeshComponent> BaseMesh;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret Mesh Component")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UStaticMeshComponent> TurretMesh;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret Mesh Component")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<USceneComponent> ProjectileSpawnComponent;
 
 	UPROPERTY()
@@ -49,8 +52,5 @@ protected:
 
 	UFUNCTION()
 	static TArray<FName> GetMaterialSlotOptions();
-
-	UFUNCTION()
-	virtual void PostInitializeComponents() override;
 
 };
