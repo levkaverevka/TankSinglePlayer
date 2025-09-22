@@ -20,7 +20,6 @@ class FOXTOWERPROJ_API ATurretPawn : public APawn
 public:
 	ATurretPawn();
 
-	UFUNCTION()
 	virtual void PostInitializeComponents() override;
 
 protected:
