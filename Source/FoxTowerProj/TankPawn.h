@@ -4,8 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "TurretPawn.h"
+#include "InputActionValue.h"
 #include "TankPawn.generated.h"
 
+class USpringArmComponent;
+class UCameraComponent;
+class UInputMappingContext;
+class UInputAction;
+class UInputComponent;
 /**
  * 
  */
@@ -14,4 +20,34 @@ class FOXTOWERPROJ_API ATankPawn : public ATurretPawn
 {
 	GENERATED_BODY()
 	
+public:
+
+	ATankPawn();
+
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+protected:
+
+	virtual void BeginPlay() override;
+
+	void Move(const FInputActionValue& Value);
+	void Turn(const FInputActionValue& Value);
+	void Fire(const FInputActionValue& Value);
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<USpringArmComponent> SpringArm;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<UCameraComponent> Camera;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputMappingContext* TankIMC;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* MoveAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* TurnAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* FireAction;
 };

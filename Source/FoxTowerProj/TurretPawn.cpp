@@ -6,6 +6,9 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/Pawn.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
+
 
 // Sets default values
 ATurretPawn::ATurretPawn()
@@ -23,7 +26,6 @@ ATurretPawn::ATurretPawn()
 
 	ProjectileSpawnComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile Spawn Component"));
 	ProjectileSpawnComponent->SetupAttachment(CapsuleComponent);
-
 }
 
 
