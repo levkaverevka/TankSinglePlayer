@@ -31,33 +31,48 @@ void ATankPawn::BeginPlay()
 		{
 			Subsystem->AddMappingContext(TankIMC, 0);
 		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("tank is missing UEnhancedInputLocalPlayerSubsystem !"));
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("tank has no controller!"));
 	}
 }
 
 void ATankPawn::Move(const FInputActionValue& Value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("IA_Move triggered"));
+	float MoveValue = Value.Get<float>();
+	UE_LOG(LogTemp, Warning, TEXT("MoveValue %f"), MoveValue);
 }
 
 void ATankPawn::Turn(const FInputActionValue& Value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("IA_TurnRight triggered"));
+	float TurnValue = Value.Get<float>();
+	UE_LOG(LogTemp, Warning, TEXT("TurnValue %f"), TurnValue);
 }
 
 void ATankPawn::Fire(const FInputActionValue& Value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("IA_Fire triggered"));
+	float bPressed = Value.Get<bool>();
+	UE_LOG(LogTemp, Warning, TEXT("Fire: %s"), *FString(bPressed ? TEXT("TRUE") : TEXT("FALSE")));
 }
 
 void ATankPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super:: SetupPlayerInputComponent(PlayerInputComponent);
 
-	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
+	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATankPawn::Move);
 		EnhancedInputComponent->BindAction(TurnAction, ETriggerEvent::Triggered, this, &ATankPawn::Turn);
 		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &ATankPawn::Fire);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("EnhancedInputComponent is missing"))
 	}
 }
 
