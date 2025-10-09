@@ -34,6 +34,8 @@ protected:
 	void Turn(const FInputActionValue& Value);
 	void Fire(const FInputActionValue& Value);
 
+	float CurrentMove = 0.f;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<USpringArmComponent> SpringArm;
 

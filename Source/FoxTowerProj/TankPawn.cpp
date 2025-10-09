@@ -57,9 +57,8 @@ void ATankPawn::Move(const FInputActionValue& Value)
 {
 	float MoveValue = Value.Get<float>();
 	float DeltaTime = GetWorld()->GetDeltaSeconds();
-	float CurrentMove = 0.f;
-	float InterpValue = FMath::FInterpTo(CurrentMove, MoveSpeed * MoveValue, 5.f, 1.f);
-	const FVector ForwardMove = FVector(InterpValue * DeltaTime, 0.f, 0.f);
+	CurrentMove = FMath::FInterpTo(CurrentMove, MoveSpeed * MoveValue, DeltaTime, 100.f);
+	const FVector ForwardMove = FVector(CurrentMove * DeltaTime, 0.f, 0.f);
 	AddActorLocalOffset(ForwardMove, false);
 	UE_LOG(LogTemp, Warning, TEXT("MoveValue %f"), MoveValue);
 }
