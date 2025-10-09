@@ -12,8 +12,9 @@
 
 ATankPawn::ATankPawn()
 {
+	PrimaryActorTick.bCanEverTick = true;
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
-	SpringArm->SetupAttachment(CapsuleComponent);
+	SpringArm->SetupAttachment(TurretMesh);
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
@@ -22,7 +23,6 @@ ATankPawn::ATankPawn()
 void ATankPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
 	if (PlayerController)
 	{
@@ -42,15 +42,34 @@ void ATankPawn::BeginPlay()
 	}
 }
 
+void ATankPawn::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	const FVector Forward = GetActorForwardVector();
+	const FVector Location = GetActorLocation();
+
+	DrawDebugLine(GetWorld(), Location, Location + Forward * 2200, FColor::Emerald, false, -1.f, 0, 2.f);
+	DrawDebugCoordinateSystem(GetWorld(), GetActorLocation(), GetActorRotation(), 200.f, false, 0.f, 0, 2.f);
+}
+
 void ATankPawn::Move(const FInputActionValue& Value)
 {
 	float MoveValue = Value.Get<float>();
+	float DeltaTime = GetWorld()->GetDeltaSeconds();
+	float CurrentMove = 0.f;
+	float InterpValue = FMath::FInterpTo(CurrentMove, MoveSpeed * MoveValue, 5.f, 1.f);
+	const FVector ForwardMove = FVector(InterpValue * DeltaTime, 0.f, 0.f);
+	AddActorLocalOffset(ForwardMove, false);
 	UE_LOG(LogTemp, Warning, TEXT("MoveValue %f"), MoveValue);
 }
 
 void ATankPawn::Turn(const FInputActionValue& Value)
 {
 	float TurnValue = Value.Get<float>();
+	float DeltaTime = GetWorld()->GetDeltaSeconds();
+	FRotator Rotation = FRotator(0.f, TurnValue * RotationSpeed * DeltaTime, 0.f);
+	AddActorLocalRotation(Rotation,false);
 	UE_LOG(LogTemp, Warning, TEXT("TurnValue %f"), TurnValue);
 }
 

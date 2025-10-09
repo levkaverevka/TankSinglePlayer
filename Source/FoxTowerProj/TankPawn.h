@@ -28,6 +28,7 @@ public:
 protected:
 
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime);
 
 	void Move(const FInputActionValue& Value);
 	void Turn(const FInputActionValue& Value);
@@ -50,4 +51,11 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* FireAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Speed")
+	float MoveSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Speed")
+	float RotationSpeed;
+
 };
