@@ -14,7 +14,7 @@ ATankPawn::ATankPawn()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
-	SpringArm->SetupAttachment(TurretMesh);
+	SpringArm->SetupAttachment(BaseMesh);
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
@@ -26,6 +26,7 @@ void ATankPawn::BeginPlay()
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
 	if (PlayerController)
 	{
+		//EnhancedInput
 		UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
 		if (Subsystem)
 		{
@@ -35,6 +36,10 @@ void ATankPawn::BeginPlay()
 		{
 			UE_LOG(LogTemp, Warning, TEXT("tank is missing UEnhancedInputLocalPlayerSubsystem !"));
 		}
+		//mouse coursor
+		PlayerController->bShowMouseCursor = true;
+		PlayerController->bEnableClickEvents = true;
+		PlayerController->bEnableMouseOverEvents = true;
 	}
 	else
 	{
@@ -51,14 +56,15 @@ void ATankPawn::Tick(float DeltaTime)
 
 	DrawDebugLine(GetWorld(), Location, Location + Forward * 2200, FColor::Emerald, false, -1.f, 0, 2.f);
 	DrawDebugCoordinateSystem(GetWorld(), GetActorLocation(), GetActorRotation(), 200.f, false, 0.f, 0, 2.f);
+	LookAtCursor();
 }
 
 void ATankPawn::Move(const FInputActionValue& Value)
 {
 	float MoveValue = Value.Get<float>();
 	float DeltaTime = GetWorld()->GetDeltaSeconds();
-	CurrentMove = FMath::FInterpTo(CurrentMove, MoveSpeed * MoveValue, DeltaTime, 100.f);
-	const FVector ForwardMove = FVector(CurrentMove * DeltaTime, 0.f, 0.f);
+	AccelerationDuration = FMath::FInterpTo(AccelerationDuration, MoveSpeed * MoveValue, DeltaTime, 1.f);
+	const FVector ForwardMove = FVector(AccelerationDuration * DeltaTime, 0.f, 0.f);
 	AddActorLocalOffset(ForwardMove, false);
 	UE_LOG(LogTemp, Warning, TEXT("MoveValue %f"), MoveValue);
 }
@@ -76,6 +82,24 @@ void ATankPawn::Fire(const FInputActionValue& Value)
 {
 	float bPressed = Value.Get<bool>();
 	UE_LOG(LogTemp, Warning, TEXT("Fire: %s"), *FString(bPressed ? TEXT("TRUE") : TEXT("FALSE")));
+}
+
+void ATankPawn::LookAtCursor()
+{
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	if (PlayerController)
+	{
+		FHitResult HitResult;
+		float DeltaTime = GetWorld()->GetDeltaSeconds();
+		PlayerController->GetHitResultUnderCursor(ECC_Visibility, false, HitResult);
+		FVector HitLocation = HitResult.ImpactPoint;
+		FVector LookAtRotation = HitLocation - TurretMesh->GetComponentLocation();
+		FRotator TurretRotation = FRotator(0.f, LookAtRotation.Rotation().Yaw-90.f, 0.f);
+		InterpolatedRotation = FMath::RInterpTo(TurretMesh->GetComponentRotation(), TurretRotation, DeltaTime, 1.f);
+		TurretMesh->SetWorldRotation(InterpolatedRotation);
+		DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 20.f, 12, FColor::Red, false, -1.f, 0, 2.f);
+	}
+	
 }
 
 void ATankPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

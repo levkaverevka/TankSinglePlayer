@@ -33,8 +33,10 @@ protected:
 	void Move(const FInputActionValue& Value);
 	void Turn(const FInputActionValue& Value);
 	void Fire(const FInputActionValue& Value);
+	void LookAtCursor();
 
-	float CurrentMove = 0.f;
+	float AccelerationDuration = 0.f;
+	FRotator InterpolatedRotation;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<USpringArmComponent> SpringArm;
