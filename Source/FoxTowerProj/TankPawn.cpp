@@ -63,10 +63,15 @@ void ATankPawn::Move(const FInputActionValue& Value)
 {
 	float MoveValue = Value.Get<float>();
 	float DeltaTime = GetWorld()->GetDeltaSeconds();
-	AccelerationDuration = FMath::FInterpTo(AccelerationDuration, MoveSpeed * MoveValue, DeltaTime, 1.f);
-	const FVector ForwardMove = FVector(AccelerationDuration * DeltaTime, 0.f, 0.f);
-	AddActorLocalOffset(ForwardMove, false);
-	UE_LOG(LogTemp, Warning, TEXT("MoveValue %f"), MoveValue);
+	if (MoveValue != 0)
+	{
+		AccelerationDuration = FMath::FInterpTo(AccelerationDuration, MoveSpeed * MoveValue, DeltaTime, 1.f);
+		const FVector ForwardMove = FVector(AccelerationDuration * DeltaTime, 0.f, 0.f);
+		AddActorLocalOffset(ForwardMove, false);
+		UE_LOG(LogTemp, Warning, TEXT("MoveValue %f"), MoveValue);
+	}
+	else
+		AccelerationDuration = 0;
 }
 
 void ATankPawn::Turn(const FInputActionValue& Value)
@@ -93,11 +98,15 @@ void ATankPawn::LookAtCursor()
 		float DeltaTime = GetWorld()->GetDeltaSeconds();
 		PlayerController->GetHitResultUnderCursor(ECC_Visibility, false, HitResult);
 		FVector HitLocation = HitResult.ImpactPoint;
-		FVector LookAtRotation = HitLocation - TurretMesh->GetComponentLocation();
-		FRotator TurretRotation = FRotator(0.f, LookAtRotation.Rotation().Yaw-90.f, 0.f);
-		InterpolatedRotation = FMath::RInterpTo(TurretMesh->GetComponentRotation(), TurretRotation, DeltaTime, 1.f);
-		TurretMesh->SetWorldRotation(InterpolatedRotation);
-		DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 20.f, 12, FColor::Red, false, -1.f, 0, 2.f);
+		if (HitLocation != FVector(0.f, 0.f, 0.f))
+		{
+			FVector LookAtRotation = HitLocation - TurretMesh->GetComponentLocation();
+			FRotator TurretRotation = FRotator(0.f, LookAtRotation.Rotation().Yaw - 90.f, 0.f);
+			InterpolatedRotation = FMath::RInterpTo(TurretMesh->GetComponentRotation(), TurretRotation, DeltaTime, 1.f);
+			TurretMesh->SetWorldRotation(InterpolatedRotation);
+			DrawDebugSphere(GetWorld(), HitLocation, 20.f, 12, FColor::Red, false, -1.f, 0, 2.f);
+			UE_LOG(LogTemp, Display, TEXT("Hit Point i %s"), *HitLocation.ToString());
+		}
 	}
 	
 }
