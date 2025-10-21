@@ -63,15 +63,11 @@ void ATankPawn::Move(const FInputActionValue& Value)
 {
 	float MoveValue = Value.Get<float>();
 	float DeltaTime = GetWorld()->GetDeltaSeconds();
-	if (MoveValue != 0)
-	{
-		AccelerationDuration = FMath::FInterpTo(AccelerationDuration, MoveSpeed * MoveValue, DeltaTime, 1.f);
-		const FVector ForwardMove = FVector(AccelerationDuration * DeltaTime, 0.f, 0.f);
-		AddActorLocalOffset(ForwardMove, false);
-		UE_LOG(LogTemp, Warning, TEXT("MoveValue %f"), MoveValue);
-	}
-	else
-		AccelerationDuration = 0;
+	AccelerationDuration = FMath::FInterpTo(AccelerationDuration, MoveSpeed * MoveValue, DeltaTime, 1.f);
+	const FVector ForwardMove = FVector(AccelerationDuration * DeltaTime, 0.f, 0.f);
+	AddActorLocalOffset(ForwardMove, false);
+	UE_LOG(LogTemp, Warning, TEXT("MoveValue %f"), MoveValue);
+	
 }
 
 void ATankPawn::Turn(const FInputActionValue& Value)
@@ -101,7 +97,7 @@ void ATankPawn::LookAtCursor()
 		if (HitLocation != FVector(0.f, 0.f, 0.f))
 		{
 			FVector Direction = HitLocation - TurretMesh->GetComponentLocation();
-			FRotator LookAtRotation = Direction.Rotation();
+			FRotator LookAtRotation = Direction.Rotation() - GetActorRotation();
 			FRotator TurretRotation = FRotator(0.f, LookAtRotation.Yaw, 0.f);
 			InterpolatedRotation = FMath::RInterpTo(TurretMesh->GetRelativeRotation(), TurretRotation, DeltaTime, 1.f);
 			TurretMesh->SetRelativeRotation(InterpolatedRotation);
