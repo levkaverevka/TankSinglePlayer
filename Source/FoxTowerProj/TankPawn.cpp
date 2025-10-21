@@ -54,6 +54,8 @@ void ATankPawn::Tick(float DeltaTime)
 	const FVector Forward = GetActorForwardVector();
 	const FVector Location = GetActorLocation();
 
+	MoveActor();
+
 	DrawDebugLine(GetWorld(), Location, Location + Forward * 2200, FColor::Emerald, false, -1.f, 0, 2.f);
 	DrawDebugCoordinateSystem(GetWorld(), GetActorLocation(), GetActorRotation(), 200.f, false, 0.f, 0, 2.f);
 	LookAtCursor();
@@ -61,13 +63,23 @@ void ATankPawn::Tick(float DeltaTime)
 
 void ATankPawn::Move(const FInputActionValue& Value)
 {
-	float MoveValue = Value.Get<float>();
+	MoveValue = Value.Get<float>();
+	//UE_LOG(LogTemp, Warning, TEXT("MoveValue %f"), MoveValue);
+}
+
+void ATankPawn::OnMoveReleased(const FInputActionValue& Value)
+{
+	MoveValue = 0.0f;
+}
+
+void ATankPawn::MoveActor()
+{
 	float DeltaTime = GetWorld()->GetDeltaSeconds();
-	AccelerationDuration = FMath::FInterpTo(AccelerationDuration, MoveSpeed * MoveValue, DeltaTime, 1.f);
-	const FVector ForwardMove = FVector(AccelerationDuration * DeltaTime, 0.f, 0.f);
+	TargetSpeed = MoveValue * MoveSpeed;
+	float InterpSpeed = (FMath::Abs(CurrentSpeed) < FMath::Abs(TargetSpeed)) ? AccelerationSpeed : DecelerationSpeed;
+	CurrentSpeed = FMath::FInterpTo(CurrentSpeed, TargetSpeed, DeltaTime, InterpSpeed);
+	ForwardMove = FVector(CurrentSpeed * DeltaTime, 0.f, 0.f);
 	AddActorLocalOffset(ForwardMove, false);
-	UE_LOG(LogTemp, Warning, TEXT("MoveValue %f"), MoveValue);
-	
 }
 
 void ATankPawn::Turn(const FInputActionValue& Value)
@@ -115,6 +127,7 @@ void ATankPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATankPawn::Move);
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Completed, this, &ATankPawn::OnMoveReleased);
 		EnhancedInputComponent->BindAction(TurnAction, ETriggerEvent::Triggered, this, &ATankPawn::Turn);
 		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &ATankPawn::Fire);
 	}

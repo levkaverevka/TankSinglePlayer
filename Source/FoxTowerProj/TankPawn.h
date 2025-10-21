@@ -31,11 +31,17 @@ protected:
 	virtual void Tick(float DeltaTime);
 
 	void Move(const FInputActionValue& Value);
+	void OnMoveReleased(const FInputActionValue& Value);
+	void MoveActor();
 	void Turn(const FInputActionValue& Value);
 	void Fire(const FInputActionValue& Value);
 	void LookAtCursor();
 
-	float AccelerationDuration = 0.f;
+
+	float MoveValue = 0.f;
+	FVector ForwardMove = FVector::ZeroVector;
+	float CurrentSpeed = 0.f;
+	float TargetSpeed = 0.f;
 	FRotator InterpolatedRotation;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
@@ -55,6 +61,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* FireAction;
+
+	UPROPERTY(EditAnywhere, Category = "Movement")
+	float AccelerationSpeed = 5.f; 
+
+	UPROPERTY(EditAnywhere, Category = "Movement")
+	float DecelerationSpeed = 6.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Speed")
 	float MoveSpeed;
