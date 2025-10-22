@@ -22,7 +22,7 @@ ATurretPawn::ATurretPawn()
 	BaseMesh->SetupAttachment(CapsuleComponent);
 
 	TurretMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Turret Mesh"));
-	TurretMesh->SetupAttachment(CapsuleComponent);
+	TurretMesh->SetupAttachment(BaseMesh);
 
 	ProjectileSpawnComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile Spawn Component"));
 	ProjectileSpawnComponent->SetupAttachment(CapsuleComponent);
