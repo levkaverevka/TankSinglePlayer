@@ -24,8 +24,17 @@ void ATowerPawn::OnSeePawn(APawn* OtherPawn)
 {
 	CurrentTarget = OtherPawn;
 	UE_LOG(LogTemp, Warning, TEXT("SEE someone!!"));
-	GetWorldTimerManager().SetTimer(FTimer, this, &ATowerPawn::Fire, FireInterval, true);
+	GetWorldTimerManager().ClearTimer(NullPawnTimer);
+	GetWorldTimerManager().SetTimer(NullPawnTimer, this, &ATowerPawn::NullPawn, 1.f, false);
+
+	GetWorldTimerManager().SetTimer(FireTimer, this, &ATowerPawn::Fire, FireInterval, true);
 	//UE_LOG(LogTemp, Warning, TEXT("I SEE SOMEONE! %s"), *OtherPawn->GetName());
+}
+
+void ATowerPawn::NullPawn()
+{
+	CurrentTarget = nullptr;
+	GetWorldTimerManager().ClearTimer(FireTimer);
 }
 
 void ATowerPawn::Fire()
@@ -37,15 +46,17 @@ void ATowerPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	
 	if (CurrentTarget)
 	{
-		float RotationSpeed = 300.f;
-		FVector Direction = CurrentTarget->GetActorLocation() - GetActorLocation();
-		FRotator LookAtRotation = Direction.Rotation() /*- GetActorRotation()*/;
+		FVector Direction = CurrentTarget->GetActorLocation() - TurretMesh->GetComponentLocation();
+		FRotator LookAtRotation = Direction.Rotation() - GetActorRotation();
 		FRotator TowerTurretRotation = FRotator(0.f, LookAtRotation.Yaw, 0.f);
-		FRotator InterpolatedRotation = FMath::RInterpTo(TurretMesh->GetComponentRotation(),TowerTurretRotation,DeltaTime,100.f);
+		FRotator InterpolatedRotation = FMath::RInterpTo(TurretMesh->GetRelativeRotation(), TowerTurretRotation, DeltaTime, 10.f);
 		TurretMesh->SetRelativeRotation(InterpolatedRotation);
 	}
+	
+
 }
 
 void ATowerPawn::LookAtPawn(APawn* OtherPawn)

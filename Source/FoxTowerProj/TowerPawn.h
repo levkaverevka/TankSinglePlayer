@@ -30,6 +30,9 @@ protected:
 	void OnSeePawn(APawn* OtherPawn);
 
 	UFUNCTION()
+	void NullPawn();
+
+	UFUNCTION()
 	void Fire();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Awareness")
@@ -38,7 +41,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Awareness")
 	float FireInterval = 0.5f;
 
-	FTimerHandle FTimer;
+	FTimerHandle FireTimer;
+	FTimerHandle NullPawnTimer;
 	APawn* CurrentTarget = nullptr;
 
 };
