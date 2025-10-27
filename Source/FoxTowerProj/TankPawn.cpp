@@ -88,7 +88,7 @@ void ATankPawn::Turn(const FInputActionValue& Value)
 	float DeltaTime = GetWorld()->GetDeltaSeconds();
 	FRotator Rotation = FRotator(0.f, TurnValue * RotationSpeed * DeltaTime, 0.f);
 	AddActorLocalRotation(Rotation,false);
-	UE_LOG(LogTemp, Warning, TEXT("TurnValue %f"), TurnValue);
+	//UE_LOG(LogTemp, Warning, TEXT("TurnValue %f"), TurnValue);
 }
 
 void ATankPawn::Fire(const FInputActionValue& Value)
@@ -114,7 +114,7 @@ void ATankPawn::LookAtCursor()
 			InterpolatedRotation = FMath::RInterpTo(TurretMesh->GetRelativeRotation(), TurretRotation, DeltaTime, 1.f);
 			TurretMesh->SetRelativeRotation(InterpolatedRotation);
 			DrawDebugSphere(GetWorld(), HitLocation, 20.f, 12, FColor::Red, false, -1.f, 0, 2.f);
-			UE_LOG(LogTemp, Display, TEXT("Hit Point i %s"), *HitLocation.ToString());
+			//UE_LOG(LogTemp, Display, TEXT("Hit Point i %s"), *HitLocation.ToString());
 		}
 	}
 	
