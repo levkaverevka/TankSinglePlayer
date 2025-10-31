@@ -24,6 +24,7 @@ public:
 
 protected:
 
+	void RotateFunction(const FRotator& LookAtRotation, float DeltaTime, float InterpSpeed);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UCapsuleComponent> CapsuleComponent;

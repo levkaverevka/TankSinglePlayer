@@ -110,9 +110,7 @@ void ATankPawn::LookAtCursor()
 		{
 			FVector Direction = HitLocation - TurretMesh->GetComponentLocation();
 			FRotator LookAtRotation = Direction.Rotation() - GetActorRotation();
-			FRotator TurretRotation = FRotator(0.f, LookAtRotation.Yaw, 0.f);
-			InterpolatedRotation = FMath::RInterpTo(TurretMesh->GetRelativeRotation(), TurretRotation, DeltaTime, 1.f);
-			TurretMesh->SetRelativeRotation(InterpolatedRotation);
+			RotateFunction(LookAtRotation, DeltaTime, 5.f);
 			DrawDebugSphere(GetWorld(), HitLocation, 20.f, 12, FColor::Red, false, -1.f, 0, 2.f);
 			//UE_LOG(LogTemp, Display, TEXT("Hit Point i %s"), *HitLocation.ToString());
 		}

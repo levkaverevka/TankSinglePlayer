@@ -8,6 +8,7 @@ ATowerPawn::ATowerPawn()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	PawnSensor = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("Awareness"));
+	TurretMesh->SetUsingAbsoluteRotation(true);
 };
 
 void ATowerPawn::BeginPlay()
@@ -50,10 +51,8 @@ void ATowerPawn::Tick(float DeltaTime)
 	if (CurrentTarget)
 	{
 		FVector Direction = CurrentTarget->GetActorLocation() - TurretMesh->GetComponentLocation();
-		FRotator LookAtRotation = Direction.Rotation() - GetActorRotation();
-		FRotator TowerTurretRotation = FRotator(0.f, LookAtRotation.Yaw, 0.f);
-		FRotator InterpolatedRotation = FMath::RInterpTo(TurretMesh->GetRelativeRotation(), TowerTurretRotation, DeltaTime, 10.f);
-		TurretMesh->SetRelativeRotation(InterpolatedRotation);
+		FRotator LookAtRotation = Direction.Rotation();
+		RotateFunction(LookAtRotation, DeltaTime, 10.f);
 	}
 	
 
