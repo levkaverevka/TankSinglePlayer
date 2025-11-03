@@ -40,6 +40,8 @@ void ATowerPawn::NullPawn()
 
 void ATowerPawn::Fire()
 {
+	SpawnParams.Owner = this;
+	SpawnProjectile();
 	UE_LOG(LogTemp, Warning, TEXT("BAM!"));
 }
 

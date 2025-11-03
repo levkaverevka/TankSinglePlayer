@@ -94,6 +94,8 @@ void ATankPawn::Turn(const FInputActionValue& Value)
 void ATankPawn::Fire(const FInputActionValue& Value)
 {
 	float bPressed = Value.Get<bool>();
+	SpawnParams.Owner = this;
+	SpawnProjectile();
 	UE_LOG(LogTemp, Warning, TEXT("Fire: %s"), *FString(bPressed ? TEXT("TRUE") : TEXT("FALSE")));
 }
 

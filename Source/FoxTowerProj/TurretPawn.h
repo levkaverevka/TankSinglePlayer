@@ -25,6 +25,9 @@ public:
 protected:
 
 	void RotateFunction(const FRotator& LookAtRotation, float DeltaTime, float InterpSpeed);
+	void SpawnProjectile();
+
+	FActorSpawnParameters SpawnParams;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UCapsuleComponent> CapsuleComponent;
@@ -49,6 +52,9 @@ protected:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Team")
 	FLinearColor TeamMaterialColor = FLinearColor::White;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile")
+	TSubclassOf<class AProjectile> Projectile;
 
 	UFUNCTION()
 	static TArray<FName> GetMaterialSlotOptions();

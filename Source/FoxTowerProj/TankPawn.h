@@ -25,10 +25,10 @@ public:
 	ATankPawn();
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void Tick(float DeltaTime);
 protected:
 
 	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime);
 
 	void Move(const FInputActionValue& Value);
 	void OnMoveReleased(const FInputActionValue& Value);
@@ -61,6 +61,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* FireAction;
+
+	/*UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category= "Projectile")
+	TSubclassOf<class AProjectile> Projectile;*/
 
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float AccelerationSpeed = 5.f; 
