@@ -28,7 +28,7 @@ void ATowerPawn::OnSeePawn(APawn* OtherPawn)
 	GetWorldTimerManager().ClearTimer(NullPawnTimer);
 	GetWorldTimerManager().SetTimer(NullPawnTimer, this, &ATowerPawn::NullPawn, 1.f, false);
 
-	GetWorldTimerManager().SetTimer(FireTimer, this, &ATowerPawn::Fire, FireInterval, true);
+	GetWorldTimerManager().SetTimer(FireTimer, this, &ATurretPawn::Fire, FireInterval, true);
 	//UE_LOG(LogTemp, Warning, TEXT("I SEE SOMEONE! %s"), *OtherPawn->GetName());
 }
 
@@ -38,12 +38,6 @@ void ATowerPawn::NullPawn()
 	GetWorldTimerManager().ClearTimer(FireTimer);
 }
 
-void ATowerPawn::Fire()
-{
-	SpawnParams.Owner = this;
-	SpawnProjectile();
-	UE_LOG(LogTemp, Warning, TEXT("BAM!"));
-}
 
 void ATowerPawn::Tick(float DeltaTime)
 {

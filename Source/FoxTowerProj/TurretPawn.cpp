@@ -43,13 +43,20 @@ TArray<FName> ATurretPawn::GetMaterialSlotOptions()
 void ATurretPawn::RotateFunction(const FRotator& LookAtRotation, float DeltaTime, float InterpSpeed)
 {
 	FRotator TurretRotation = FRotator(0.f, LookAtRotation.Yaw, 0.f);
-	FRotator InterpolatedRotation = FMath::RInterpTo(TurretMesh->GetRelativeRotation(), TurretRotation, DeltaTime, 1.f);
+	FRotator InterpolatedRotation = FMath::RInterpTo(TurretMesh->GetRelativeRotation(), TurretRotation, DeltaTime, 7.f);
 	TurretMesh->SetRelativeRotation(InterpolatedRotation);;
+}
+
+void ATurretPawn::Fire()
+{
+	/*FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;*/
+	SpawnProjectile();
 }
 
 void ATurretPawn::SpawnProjectile()
 {
-	GetWorld()->SpawnActor<AActor>(Projectile.Get(), ProjectileSpawnComponent->GetComponentLocation(), ProjectileSpawnComponent->GetComponentRotation(), SpawnParams);
+	GetWorld()->SpawnActor<AActor>(Projectile.Get(), ProjectileSpawnComponent->GetComponentLocation(), ProjectileSpawnComponent->GetComponentRotation());
 }
 
 void ATurretPawn::PostInitializeComponents()

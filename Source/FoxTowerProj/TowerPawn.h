@@ -31,9 +31,6 @@ protected:
 	UFUNCTION()
 	void NullPawn();
 
-	UFUNCTION()
-	void Fire();
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Awareness")
 	TObjectPtr<UPawnSensingComponent> PawnSensor;
 

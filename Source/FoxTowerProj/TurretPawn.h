@@ -21,13 +21,12 @@ public:
 	ATurretPawn();
 
 	virtual void PostInitializeComponents() override;
+	void Fire();
 
 protected:
 
 	void RotateFunction(const FRotator& LookAtRotation, float DeltaTime, float InterpSpeed);
 	void SpawnProjectile();
-
-	FActorSpawnParameters SpawnParams;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UCapsuleComponent> CapsuleComponent;
