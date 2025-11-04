@@ -49,14 +49,14 @@ void ATurretPawn::RotateFunction(const FRotator& LookAtRotation, float DeltaTime
 
 void ATurretPawn::Fire()
 {
-	/*FActorSpawnParameters SpawnParams;
-	SpawnParams.Owner = this;*/
 	SpawnProjectile();
 }
 
 void ATurretPawn::SpawnProjectile()
 {
-	GetWorld()->SpawnActor<AActor>(Projectile.Get(), ProjectileSpawnComponent->GetComponentLocation(), ProjectileSpawnComponent->GetComponentRotation());
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;
+	GetWorld()->SpawnActor<AActor>(Projectile.Get(), ProjectileSpawnComponent->GetComponentLocation(), ProjectileSpawnComponent->GetComponentRotation(), SpawnParams);
 }
 
 void ATurretPawn::PostInitializeComponents()
