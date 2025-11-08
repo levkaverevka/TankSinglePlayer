@@ -3,6 +3,8 @@
 
 #include "TowerPawn.h"
 #include "Perception/PawnSensingComponent.h"
+#include "Projectile.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 
 ATowerPawn::ATowerPawn()
 {
@@ -28,7 +30,7 @@ void ATowerPawn::OnSeePawn(APawn* OtherPawn)
 	GetWorldTimerManager().ClearTimer(NullPawnTimer);
 	GetWorldTimerManager().SetTimer(NullPawnTimer, this, &ATowerPawn::NullPawn, 1.f, false);
 
-	GetWorldTimerManager().SetTimer(FireTimer, this, &ATowerPawn::Fire, FireInterval, true);
+	GetWorldTimerManager().SetTimer(FireTimer, this, &ATurretPawn::Fire, FireInterval, true);
 	//UE_LOG(LogTemp, Warning, TEXT("I SEE SOMEONE! %s"), *OtherPawn->GetName());
 }
 
@@ -38,10 +40,6 @@ void ATowerPawn::NullPawn()
 	GetWorldTimerManager().ClearTimer(FireTimer);
 }
 
-void ATowerPawn::Fire()
-{
-	UE_LOG(LogTemp, Warning, TEXT("BAM!"));
-}
 
 void ATowerPawn::Tick(float DeltaTime)
 {
@@ -50,11 +48,18 @@ void ATowerPawn::Tick(float DeltaTime)
 	
 	if (CurrentTarget)
 	{
-		FVector Direction = CurrentTarget->GetActorLocation() - TurretMesh->GetComponentLocation();
-		FRotator LookAtRotation = Direction.Rotation();
-		RotateFunction(LookAtRotation, DeltaTime, 10.f);
+		FVector TargetLocation = CurrentTarget->GetActorLocation();
+		FVector MuzlleLocation = TurretMesh->GetComponentLocation();
+		FVector Direction = TargetLocation - TurretMesh->GetComponentLocation();
+		const AProjectile* DefaultProj = Projectile.GetDefaultObject();
+		float ProjSpeed = DefaultProj->ProjMovement->InitialSpeed;
+		FVector TargetVelocity = CurrentTarget->GetVelocity();
+		float Distance = Direction.Size();
+		float TimeToHit = Distance / ProjSpeed;
+		FVector PredictedLocation = TargetLocation + TargetVelocity * TimeToHit * 10.f;
+		FRotator PredictedRotation = (PredictedLocation - MuzlleLocation).Rotation();
+		RotateFunction(PredictedRotation, DeltaTime, 100.f);
 	}
-	
 
 }
 

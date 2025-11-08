@@ -8,6 +8,7 @@
 #include "GameFramework/Pawn.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Projectile.h"
 
 
 // Sets default values
@@ -25,7 +26,7 @@ ATurretPawn::ATurretPawn()
 	TurretMesh->SetupAttachment(BaseMesh);
 
 	ProjectileSpawnComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile Spawn Component"));
-	ProjectileSpawnComponent->SetupAttachment(CapsuleComponent);
+	ProjectileSpawnComponent->SetupAttachment(TurretMesh);
 }
 
 
@@ -39,11 +40,23 @@ TArray<FName> ATurretPawn::GetMaterialSlotOptions()
 		
 }
 
-void ATurretPawn::RotateFunction(const FRotator& LookAtRotation, float DeltaTime, float InterpSpeed)
+void ATurretPawn::RotateFunction(const FRotator& PredictedRotation, float DeltaTime, float InterpSpeed)
 {
-	FRotator TurretRotation = FRotator(0.f, LookAtRotation.Yaw, 0.f);
-	FRotator InterpolatedRotation = FMath::RInterpTo(TurretMesh->GetRelativeRotation(), TurretRotation, DeltaTime, 1.f);
+	FRotator TurretRotation = FRotator(0.f, PredictedRotation.Yaw, 0.f);
+	FRotator InterpolatedRotation = FMath::RInterpTo(TurretMesh->GetRelativeRotation(), TurretRotation, DeltaTime, InterpSpeed);
 	TurretMesh->SetRelativeRotation(InterpolatedRotation);;
+}
+
+void ATurretPawn::Fire()
+{
+	SpawnProjectile();
+}
+
+void ATurretPawn::SpawnProjectile()
+{
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;
+	GetWorld()->SpawnActor<AActor>(Projectile.Get(), ProjectileSpawnComponent->GetComponentLocation(), ProjectileSpawnComponent->GetComponentRotation(), SpawnParams);
 }
 
 void ATurretPawn::PostInitializeComponents()

@@ -18,10 +18,9 @@ class FOXTOWERPROJ_API ATowerPawn : public ATurretPawn
 public:
 	ATowerPawn();
 	
+	virtual void Tick(float DeltaTime) override;
 protected:
 	virtual void BeginPlay() override;
-
-	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
 	void LookAtPawn(APawn* OtherPawn);
@@ -31,9 +30,6 @@ protected:
 
 	UFUNCTION()
 	void NullPawn();
-
-	UFUNCTION()
-	void Fire();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Awareness")
 	TObjectPtr<UPawnSensingComponent> PawnSensor;

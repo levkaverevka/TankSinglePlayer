@@ -91,10 +91,9 @@ void ATankPawn::Turn(const FInputActionValue& Value)
 	//UE_LOG(LogTemp, Warning, TEXT("TurnValue %f"), TurnValue);
 }
 
-void ATankPawn::Fire(const FInputActionValue& Value)
+void ATankPawn::TankFire(const FInputActionValue& Value)
 {
-	float bPressed = Value.Get<bool>();
-	UE_LOG(LogTemp, Warning, TEXT("Fire: %s"), *FString(bPressed ? TEXT("TRUE") : TEXT("FALSE")));
+	ATurretPawn::Fire();
 }
 
 void ATankPawn::LookAtCursor()
