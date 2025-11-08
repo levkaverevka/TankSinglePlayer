@@ -11,7 +11,8 @@ AProjectile::AProjectile()
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Projectile"));
 	RootComponent = ProjectileMesh;
 
-	ProjMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement Component"));
+	ProjMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement Component"));
+	ProjMovement->InitialSpeed = 5000.f;
 }
 
 // Called when the game starts or when spawned
@@ -25,12 +26,5 @@ void AProjectile::BeginPlay()
 void AProjectile::OnComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	GetWorld()->DestroyActor(this, false, false);
-}
-
-// Called every frame
-void AProjectile::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
 }
 

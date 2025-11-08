@@ -40,10 +40,10 @@ TArray<FName> ATurretPawn::GetMaterialSlotOptions()
 		
 }
 
-void ATurretPawn::RotateFunction(const FRotator& LookAtRotation, float DeltaTime, float InterpSpeed)
+void ATurretPawn::RotateFunction(const FRotator& PredictedRotation, float DeltaTime, float InterpSpeed)
 {
-	FRotator TurretRotation = FRotator(0.f, LookAtRotation.Yaw, 0.f);
-	FRotator InterpolatedRotation = FMath::RInterpTo(TurretMesh->GetRelativeRotation(), TurretRotation, DeltaTime, 7.f);
+	FRotator TurretRotation = FRotator(0.f, PredictedRotation.Yaw, 0.f);
+	FRotator InterpolatedRotation = FMath::RInterpTo(TurretMesh->GetRelativeRotation(), TurretRotation, DeltaTime, InterpSpeed);
 	TurretMesh->SetRelativeRotation(InterpolatedRotation);;
 }
 

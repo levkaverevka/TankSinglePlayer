@@ -91,7 +91,7 @@ void ATankPawn::Turn(const FInputActionValue& Value)
 	//UE_LOG(LogTemp, Warning, TEXT("TurnValue %f"), TurnValue);
 }
 
-void ATankPawn::Fire(const FInputActionValue& Value)
+void ATankPawn::TankFire(const FInputActionValue& Value)
 {
 	ATurretPawn::Fire();
 }

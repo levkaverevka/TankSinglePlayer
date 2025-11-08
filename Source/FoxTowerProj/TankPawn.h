@@ -34,7 +34,7 @@ protected:
 	void OnMoveReleased(const FInputActionValue& Value);
 	void MoveActor();
 	void Turn(const FInputActionValue& Value);
-	void Fire(const FInputActionValue& Value);
+	void TankFire(const FInputActionValue& Value);
 	void LookAtCursor();
 
 

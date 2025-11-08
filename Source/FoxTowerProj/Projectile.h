@@ -15,15 +15,13 @@ class FOXTOWERPROJ_API AProjectile : public AActor
 public:	
 	AProjectile();
 
-	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	TObjectPtr<UProjectileMovementComponent> ProjMovement;
 protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UStaticMeshComponent> ProjectileMesh;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	TObjectPtr<UProjectileMovementComponent> ProjMovementComponent;
 
 	UFUNCTION()
 	void OnComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
