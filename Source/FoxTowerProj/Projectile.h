@@ -23,6 +23,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UStaticMeshComponent> ProjectileMesh;
 
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Damage")
+	float Damage = 25.f;
+
 	UFUNCTION()
 	void OnComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 

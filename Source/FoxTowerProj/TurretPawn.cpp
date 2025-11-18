@@ -9,6 +9,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Projectile.h"
+#include "HealthComponent.h"
 
 
 // Sets default values
@@ -27,6 +28,8 @@ ATurretPawn::ATurretPawn()
 
 	ProjectileSpawnComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile Spawn Component"));
 	ProjectileSpawnComponent->SetupAttachment(TurretMesh);
+
+	Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Component"));
 }
 
 
