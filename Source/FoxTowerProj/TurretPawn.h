@@ -21,6 +21,7 @@ class FOXTOWERPROJ_API ATurretPawn : public APawn
 public:
 	ATurretPawn();
 
+	virtual void BeginPlay() override;
 	virtual void PostInitializeComponents() override;
 	void Fire();
 
@@ -42,7 +43,7 @@ protected:
 	TObjectPtr<USceneComponent> ProjectileSpawnComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UHealthComponent* Health;
+	UHealthComponent* HealthComponent;
 
 	UPROPERTY()
 	TObjectPtr<UMaterialInstanceDynamic> Dynamic_MI_Ref;
@@ -61,6 +62,9 @@ protected:
 
 	UFUNCTION()
 	static TArray<FName> GetMaterialSlotOptions();
+
+	UFUNCTION()
+	void OnDeathStarted();
 
 
 };

@@ -29,7 +29,7 @@ ATurretPawn::ATurretPawn()
 	ProjectileSpawnComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile Spawn Component"));
 	ProjectileSpawnComponent->SetupAttachment(TurretMesh);
 
-	Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Component"));
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Component"));
 }
 
 
@@ -41,6 +41,11 @@ TArray<FName> ATurretPawn::GetMaterialSlotOptions()
 		FName("_Base_Material")
 	};
 		
+}
+
+void ATurretPawn::OnDeathStarted()
+{
+	Destroy();
 }
 
 void ATurretPawn::RotateFunction(const FRotator& PredictedRotation, float DeltaTime, float InterpSpeed)
@@ -60,6 +65,14 @@ void ATurretPawn::SpawnProjectile()
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.Owner = this;
 	GetWorld()->SpawnActor<AActor>(Projectile.Get(), ProjectileSpawnComponent->GetComponentLocation(), ProjectileSpawnComponent->GetComponentRotation(), SpawnParams);
+}
+
+void ATurretPawn::BeginPlay()
+{
+	if (HealthComponent)
+	{
+		HealthComponent->OnDeath.AddDynamic(this, &ATurretPawn::OnDeathStarted);
+	}
 }
 
 void ATurretPawn::PostInitializeComponents()

@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "HealthComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDeath);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class FOXTOWERPROJ_API UHealthComponent : public UActorComponent
@@ -13,13 +14,14 @@ class FOXTOWERPROJ_API UHealthComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
+
 	UHealthComponent();
 
-	/*virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;*/
+	UPROPERTY(BlueprintAssignable, Category = "Health")
+	FOnDeath OnDeath;
 
 protected:
-	// Called when the game starts
+
 	virtual void BeginPlay() override;
 		
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
