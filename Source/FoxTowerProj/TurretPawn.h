@@ -11,6 +11,7 @@ class StaticMeshComponent;
 class USceneComponent;
 class UInputComponent;
 class UMaterialInstanceDynamic;
+class UHealthComponent;
 
 UCLASS(ABSTRACT)
 class FOXTOWERPROJ_API ATurretPawn : public APawn
@@ -20,6 +21,7 @@ class FOXTOWERPROJ_API ATurretPawn : public APawn
 public:
 	ATurretPawn();
 
+	virtual void BeginPlay() override;
 	virtual void PostInitializeComponents() override;
 	void Fire();
 
@@ -40,6 +42,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<USceneComponent> ProjectileSpawnComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UHealthComponent* HealthComponent;
+
 	UPROPERTY()
 	TObjectPtr<UMaterialInstanceDynamic> Dynamic_MI_Ref;
 
@@ -57,5 +62,9 @@ protected:
 
 	UFUNCTION()
 	static TArray<FName> GetMaterialSlotOptions();
+
+	UFUNCTION()
+	void OnDeathStarted(AActor* DeadActor, UHealthComponent* HealthComp);
+
 
 };
