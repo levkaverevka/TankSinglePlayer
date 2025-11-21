@@ -43,7 +43,7 @@ TArray<FName> ATurretPawn::GetMaterialSlotOptions()
 		
 }
 
-void ATurretPawn::OnDeathStarted()
+void ATurretPawn::OnDeathStarted(AActor* DeadActor, UHealthComponent* HealthComp)
 {
 	Destroy();
 }
@@ -69,10 +69,7 @@ void ATurretPawn::SpawnProjectile()
 
 void ATurretPawn::BeginPlay()
 {
-	if (HealthComponent)
-	{
-		HealthComponent->OnDeath.AddDynamic(this, &ATurretPawn::OnDeathStarted);
-	}
+	HealthComponent->OnDeath.AddDynamic(this, &ATurretPawn::OnDeathStarted);
 }
 
 void ATurretPawn::PostInitializeComponents()

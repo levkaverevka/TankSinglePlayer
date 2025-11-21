@@ -28,6 +28,6 @@ void UHealthComponent::HandleDamage(AActor* DamagedActor, float Damage, const UD
 	if (CurrentHealth <= 0.f)
 	{
 		CurrentHealth = 0.f;
-		OnDeath.Broadcast();
+		OnDeath.Broadcast(DamagedActor,this);
 	}
 }
