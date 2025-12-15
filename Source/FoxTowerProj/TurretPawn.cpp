@@ -12,6 +12,7 @@
 #include "HealthComponent.h"
 
 
+DEFINE_LOG_CATEGORY(DeathLog);
 // Sets default values
 ATurretPawn::ATurretPawn()
 {
@@ -45,6 +46,7 @@ TArray<FName> ATurretPawn::GetMaterialSlotOptions()
 
 void ATurretPawn::OnDeathStarted(AActor* DeadActor, UHealthComponent* HealthComp)
 {
+	UE_LOG(DeathLog, Warning, TEXT("%s, is dead,  (HealthComp: %s) "), *DeadActor->GetName(), *HealthComp->GetName());
 	Destroy();
 }
 
@@ -69,6 +71,7 @@ void ATurretPawn::SpawnProjectile()
 
 void ATurretPawn::BeginPlay()
 {
+	Super::BeginPlay();
 	HealthComponent->OnDeath.AddDynamic(this, &ATurretPawn::OnDeathStarted);
 }
 
@@ -91,3 +94,4 @@ void ATurretPawn::PostInitializeComponents()
 	ApplyTeamColor(BaseMesh);
 	ApplyTeamColor(TurretMesh);
 }
+

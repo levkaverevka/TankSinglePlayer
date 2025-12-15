@@ -14,4 +14,5 @@ class FOXTOWERPROJ_API AMyGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+
 };
