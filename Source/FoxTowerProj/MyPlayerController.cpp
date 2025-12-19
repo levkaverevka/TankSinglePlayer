@@ -3,6 +3,7 @@
 
 #include "MyPlayerController.h"
 #include "Blueprint/UserWidget.h"
+#include "Kismet/GameplayStatics.h"
 #include "GameFramework/GameModeBase.h"
 #include "MyHUD.h"
 
@@ -20,19 +21,15 @@ void AMyPlayerController::SetPlayerEnableState(bool bEnableState)
 	}
 }
 
-void AMyPlayerController::Respawn()
+void AMyPlayerController::RestartCurrentLevel()
 {
-	if (GetWorld()) 
+	if (UWorld* World = GetWorld()) 
 	{
-		AGameModeBase* GM = GetWorld()->GetAuthGameMode();
-		if (GM)
+		const FName CurrentLevelName(*World->GetName());
+		UGameplayStatics::OpenLevel(this, CurrentLevelName);
+		if (AMyHUD* HUD = GetHUD<AMyHUD>())
 		{
-			GM->RestartPlayer(this);
-			if (AMyHUD* HUD = GetHUD<AMyHUD>())
-			{
-				HUD->RemoveEndScreen();
-			}
-
+			HUD->RemoveEndScreen();
 		}
 	}
 		

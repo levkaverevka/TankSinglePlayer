@@ -4,11 +4,15 @@
 #include "MyHUD.h"
 #include "Blueprint/UserWidget.h"
 #include "HealthComponent.h"
+#include "TankPawn.h"
+#include "TowerPawn.h"
+#include "MyGameModeBase.h"
+
 
 void AMyHUD::BeginPlay()
 {
 	Super::BeginPlay();
-	if(APlayerController* PC = GetOwningPlayerController())
+	if (APlayerController* PC = GetOwningPlayerController())
 	{
 		if (APawn* Pawn = PC->GetPawn())
 		{
@@ -17,28 +21,48 @@ void AMyHUD::BeginPlay()
 	}
 	if (HealthComponent)
 	{
-		HealthComponent->OnDeath.AddDynamic(this, &AMyHUD::ShowEndScreen);
+		HealthComponent->OnDeath.AddDynamic(this, &AMyHUD::ShowLoseScreen);
+	}
+	if (AMyGameModeBase* GM = Cast<AMyGameModeBase>(GetWorld()->GetAuthGameMode()))
+	{
+		GM->OnWinGame.AddDynamic(this, &AMyHUD::ShowWinScreen);
 	}
 }
 
-void AMyHUD::ShowEndScreen(AActor* DeadActor, UHealthComponent* HealthComp)
+void AMyHUD::ShowLoseScreen(AActor* DeadActor, UHealthComponent* HealthComp)
 {
-	if (LoseWidgetClass)
+
+	if (Cast<ATankPawn>(DeadActor))
 	{
-		LoseWidget = CreateWidget(GetOwningPlayerController(), LoseWidgetClass);
-		if (LoseWidget)
+		if (LoseWidgetClass)
 		{
-			LoseWidget->AddToViewport(10);
+			EndScreenWidget = CreateWidget(GetOwningPlayerController(), LoseWidgetClass);
+			if (EndScreenWidget)
+			{
+				EndScreenWidget->AddToViewport(10);
+			}
+		}
+	}
+}
+
+void AMyHUD::ShowWinScreen()
+{
+	if (WinWidgetClass)
+	{
+		EndScreenWidget = CreateWidget(GetOwningPlayerController(), WinWidgetClass);
+		if (EndScreenWidget)
+		{
+			EndScreenWidget->AddToViewport(10);
 		}
 	}
 }
 
 void AMyHUD::RemoveEndScreen()
 {
-	if (LoseWidget)
+	if (EndScreenWidget)
 	{
-		LoseWidget->RemoveFromParent();
-		LoseWidget = nullptr;
+		EndScreenWidget->RemoveFromParent();
+		EndScreenWidget = nullptr;
 	}
 }
 

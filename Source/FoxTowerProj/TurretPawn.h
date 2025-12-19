@@ -66,7 +66,7 @@ protected:
 	static TArray<FName> GetMaterialSlotOptions();
 
 	UFUNCTION()
-	void OnDeathStarted(AActor* DeadActor, UHealthComponent* HealthComp);
+	virtual void OnDeathStarted(AActor* DeadActor, UHealthComponent* HealthComp);
 
 
 };

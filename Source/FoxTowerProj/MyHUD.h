@@ -18,10 +18,13 @@ class FOXTOWERPROJ_API AMyHUD : public AHUD
 	
 	public:
 		virtual void BeginPlay() override;
-		UUserWidget* LoseWidget = nullptr;
+		UUserWidget* EndScreenWidget = nullptr;
 
 		UFUNCTION(BlueprintCallable)
-		void ShowEndScreen(AActor* DeadActor, UHealthComponent* HealthComp);
+		void ShowLoseScreen(AActor* DeadActor, UHealthComponent* HealthComp);
+
+		UFUNCTION(BlueprintCallable)
+		void ShowWinScreen();
 
 		UFUNCTION(BlueprintCallable)
 		void RemoveEndScreen();
