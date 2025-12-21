@@ -12,35 +12,22 @@
 void AMyHUD::BeginPlay()
 {
 	Super::BeginPlay();
-	if (APlayerController* PC = GetOwningPlayerController())
-	{
-		if (APawn* Pawn = PC->GetPawn())
-		{
-			HealthComponent = Pawn->FindComponentByClass<UHealthComponent>();
-		}
-	}
-	if (HealthComponent)
-	{
-		HealthComponent->OnDeath.AddDynamic(this, &AMyHUD::ShowLoseScreen);
-	}
 	if (AMyGameModeBase* GM = Cast<AMyGameModeBase>(GetWorld()->GetAuthGameMode()))
 	{
 		GM->OnWinGame.AddDynamic(this, &AMyHUD::ShowWinScreen);
+		GM->OnLoseGame.AddDynamic(this, &AMyHUD::ShowLoseScreen);
+		GM->OnRestart.AddDynamic(this, &AMyHUD::RemoveEndScreen);
 	}
 }
 
-void AMyHUD::ShowLoseScreen(AActor* DeadActor, UHealthComponent* HealthComp)
+void AMyHUD::ShowLoseScreen()
 {
-
-	if (Cast<ATankPawn>(DeadActor))
+	if (LoseWidgetClass)
 	{
-		if (LoseWidgetClass)
+		EndScreenWidget = CreateWidget(GetOwningPlayerController(), LoseWidgetClass);
+		if (EndScreenWidget)
 		{
-			EndScreenWidget = CreateWidget(GetOwningPlayerController(), LoseWidgetClass);
-			if (EndScreenWidget)
-			{
-				EndScreenWidget->AddToViewport(10);
-			}
+			EndScreenWidget->AddToViewport(10);
 		}
 	}
 }

@@ -17,17 +17,10 @@ class FOXTOWERPROJ_API AMyHUD : public AHUD
 	GENERATED_BODY()
 	
 	public:
+
+	protected:
+
 		virtual void BeginPlay() override;
-		UUserWidget* EndScreenWidget = nullptr;
-
-		UFUNCTION(BlueprintCallable)
-		void ShowLoseScreen(AActor* DeadActor, UHealthComponent* HealthComp);
-
-		UFUNCTION(BlueprintCallable)
-		void ShowWinScreen();
-
-		UFUNCTION(BlueprintCallable)
-		void RemoveEndScreen();
 
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 		TSubclassOf<UUserWidget> LoseWidgetClass;
@@ -37,4 +30,17 @@ class FOXTOWERPROJ_API AMyHUD : public AHUD
 
 		UPROPERTY()
 		UHealthComponent* HealthComponent;
+
+		UFUNCTION(BlueprintCallable)
+		void ShowLoseScreen();
+
+		UFUNCTION(BlueprintCallable)
+		void ShowWinScreen();
+
+		UFUNCTION(BlueprintCallable)
+		void RemoveEndScreen();
+
+	private:
+		UUserWidget* EndScreenWidget = nullptr;
+
 };

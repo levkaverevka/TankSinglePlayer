@@ -19,8 +19,4 @@ class FOXTOWERPROJ_API AMyPlayerController : public APlayerController
 
 		UFUNCTION(BlueprintCallable)
 		void SetPlayerEnableState(bool bEnableState);
-
-		UFUNCTION(BlueprintCallable)
-		void RestartCurrentLevel();
-
 };

@@ -8,9 +8,6 @@
 
 class UPawnSensingComponent;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTowerSpawn);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTowerDestroyed);
-
 UCLASS()
 class FOXTOWERPROJ_API ATowerPawn : public ATurretPawn
 {
@@ -18,11 +15,6 @@ class FOXTOWERPROJ_API ATowerPawn : public ATurretPawn
 
 public:
 	ATowerPawn();
-	UPROPERTY(BlueprintAssignable, Category = "Spawn")
-	FOnTowerSpawn OnTowerSpawn;
-
-	UPROPERTY(BlueprintAssignable, Category = "Spawn")
-	FOnTowerSpawn OnTowerDestroyed;
 	
 	virtual void Tick(float DeltaTime) override;
 protected:
@@ -44,7 +36,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Awareness")
 	float FireInterval = 0.5f;
-
 	
 	FTimerHandle FireTimer;
 	FTimerHandle NullPawnTimer;

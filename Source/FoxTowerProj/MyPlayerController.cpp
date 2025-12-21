@@ -21,17 +21,3 @@ void AMyPlayerController::SetPlayerEnableState(bool bEnableState)
 	}
 }
 
-void AMyPlayerController::RestartCurrentLevel()
-{
-	if (UWorld* World = GetWorld()) 
-	{
-		const FName CurrentLevelName(*World->GetName());
-		UGameplayStatics::OpenLevel(this, CurrentLevelName);
-		if (AMyHUD* HUD = GetHUD<AMyHUD>())
-		{
-			HUD->RemoveEndScreen();
-		}
-	}
-		
-}
-

@@ -19,8 +19,7 @@ void ATowerPawn::BeginPlay()
 	Super::BeginPlay();
 	if (AMyGameModeBase* GM = GetWorld()->GetAuthGameMode<AMyGameModeBase>())
 	{
-		OnTowerSpawn.AddDynamic(GM, &AMyGameModeBase::AddEnemyCount);
-		OnTowerSpawn.Broadcast();
+		GM->AddEnemyCount();
 	}
 	
 	if (PawnSensor)
@@ -51,8 +50,7 @@ void ATowerPawn::OnDeathStarted(AActor* DeadActor, UHealthComponent* HealthComp)
 	Super::OnDeathStarted(DeadActor, HealthComp);
 	if (AMyGameModeBase* GM = GetWorld()->GetAuthGameMode<AMyGameModeBase>())
 	{
-		OnTowerDestroyed.AddDynamic(GM, &AMyGameModeBase::DecreaseEnemyCount);
-		OnTowerDestroyed.Broadcast();
+		GM->DecreaseEnemyCount();
 	}
 }
 
