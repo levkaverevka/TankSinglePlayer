@@ -13,6 +13,8 @@ class UInputComponent;
 class UMaterialInstanceDynamic;
 class UHealthComponent;
 
+DECLARE_LOG_CATEGORY_EXTERN(DeathLog, Warning, All);
+
 UCLASS(ABSTRACT)
 class FOXTOWERPROJ_API ATurretPawn : public APawn
 {
@@ -64,7 +66,7 @@ protected:
 	static TArray<FName> GetMaterialSlotOptions();
 
 	UFUNCTION()
-	void OnDeathStarted(AActor* DeadActor, UHealthComponent* HealthComp);
+	virtual void OnDeathStarted(AActor* DeadActor, UHealthComponent* HealthComp);
 
 
 };

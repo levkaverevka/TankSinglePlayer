@@ -7,9 +7,7 @@
 #include "TowerPawn.generated.h"
 
 class UPawnSensingComponent;
-/**
- * 
- */
+
 UCLASS()
 class FOXTOWERPROJ_API ATowerPawn : public ATurretPawn
 {
@@ -30,13 +28,15 @@ protected:
 
 	UFUNCTION()
 	void NullPawn();
+	
+	virtual void OnDeathStarted(AActor* DeadActor, UHealthComponent* HealthComp) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Awareness")
 	TObjectPtr<UPawnSensingComponent> PawnSensor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Awareness")
 	float FireInterval = 0.5f;
-
+	
 	FTimerHandle FireTimer;
 	FTimerHandle NullPawnTimer;
 	APawn* CurrentTarget = nullptr;

@@ -4,20 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "Blueprint/UserWidget.h"
 #include "MyPlayerController.generated.h"
 
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable)
 class FOXTOWERPROJ_API AMyPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
 	public:
 
-	/*	UFUNCTION(UBlueprintCallable)
-		void SetPlayerEnableState(bool PlayerEnableState);
-		*/
-
+		UFUNCTION(BlueprintCallable)
+		void SetPlayerEnableState(bool bEnableState);
 };

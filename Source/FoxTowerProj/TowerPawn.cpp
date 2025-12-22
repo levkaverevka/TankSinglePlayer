@@ -5,6 +5,7 @@
 #include "Perception/PawnSensingComponent.h"
 #include "Projectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "MyGameModeBase.h"
 
 ATowerPawn::ATowerPawn()
 {
@@ -16,7 +17,11 @@ ATowerPawn::ATowerPawn()
 void ATowerPawn::BeginPlay()
 {
 	Super::BeginPlay();
-
+	if (AMyGameModeBase* GM = GetWorld()->GetAuthGameMode<AMyGameModeBase>())
+	{
+		GM->AddEnemyCount();
+	}
+	
 	if (PawnSensor)
 	{
 		PawnSensor->OnSeePawn.AddDynamic(this, &ATowerPawn::OnSeePawn);
@@ -38,6 +43,15 @@ void ATowerPawn::NullPawn()
 {
 	CurrentTarget = nullptr;
 	GetWorldTimerManager().ClearTimer(FireTimer);
+}
+
+void ATowerPawn::OnDeathStarted(AActor* DeadActor, UHealthComponent* HealthComp)
+{
+	Super::OnDeathStarted(DeadActor, HealthComp);
+	if (AMyGameModeBase* GM = GetWorld()->GetAuthGameMode<AMyGameModeBase>())
+	{
+		GM->DecreaseEnemyCount();
+	}
 }
 
 
