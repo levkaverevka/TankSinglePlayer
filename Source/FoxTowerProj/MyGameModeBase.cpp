@@ -11,6 +11,8 @@ void AMyGameModeBase::BeginPlay()
 {
     Super::BeginPlay();
 
+    OnGameStart.Broadcast();
+    GetWorldTimerManager().SetTimer(StartDelayTimer, this,&AMyGameModeBase::GameStart, 3.f, false);
     if (APlayerController* PC = GetWorld()->GetFirstPlayerController())
     {
         if (APawn* Pawn = PC->GetPawn())
@@ -60,4 +62,9 @@ void AMyGameModeBase::RestartCurrentLevel()
         UGameplayStatics::OpenLevel(this, CurrentLevelName);
         OnRestart.Broadcast();
     }
+}
+
+void AMyGameModeBase::GameStart()
+{
+    OnGameStart.Broadcast();
 }

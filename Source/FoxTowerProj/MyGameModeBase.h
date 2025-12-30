@@ -11,6 +11,8 @@ class UHealthComponent;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWinGame);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnLoseGame);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnRestart);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameStart);
+
 UCLASS()
 class FOXTOWERPROJ_API AMyGameModeBase : public AGameModeBase
 {
@@ -30,6 +32,9 @@ class FOXTOWERPROJ_API AMyGameModeBase : public AGameModeBase
 
 		UPROPERTY(BlueprintAssignable, Category = "Game state")
 		FOnRestart OnRestart;
+
+		UPROPERTY(BlueprintAssignable, Category = "Game state")
+		FOnGameStart OnGameStart;
 	protected:
 		virtual void BeginPlay() override;
 
@@ -44,6 +49,9 @@ class FOXTOWERPROJ_API AMyGameModeBase : public AGameModeBase
 		UFUNCTION(BlueprintCallable)
 		void RestartCurrentLevel();
 
-	private:
+		UFUNCTION()
+		void GameStart();
 
+	private:
+		FTimerHandle StartDelayTimer;
 };

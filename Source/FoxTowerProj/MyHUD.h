@@ -28,6 +28,9 @@ class FOXTOWERPROJ_API AMyHUD : public AHUD
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 		TSubclassOf<UUserWidget> WinWidgetClass;
 
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+		TSubclassOf<UUserWidget> StartWidgetClass;
+
 		UPROPERTY()
 		UHealthComponent* HealthComponent;
 
@@ -40,7 +43,14 @@ class FOXTOWERPROJ_API AMyHUD : public AHUD
 		UFUNCTION(BlueprintCallable)
 		void RemoveEndScreen();
 
+		UFUNCTION(BlueprintCallable)
+		void ShowStartScreen();
+
+		UFUNCTION(BlueprintCallable)
+		void HideStartScreen();
+
 	private:
 		UUserWidget* EndScreenWidget = nullptr;
+		UUserWidget* StartWidget = nullptr;
 
 };
