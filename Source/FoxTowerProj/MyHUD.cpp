@@ -16,10 +16,10 @@ void AMyHUD::BeginPlay()
 	ShowStartScreen();
 	if (AMyGameModeBase* GM = Cast<AMyGameModeBase>(GetWorld()->GetAuthGameMode()))
 	{
-		GM->OnWinGame.AddDynamic(this, &AMyHUD::ShowWinScreen);
-		GM->OnLoseGame.AddDynamic(this, &AMyHUD::ShowLoseScreen);
-		GM->OnRestart.AddDynamic(this, &AMyHUD::RemoveEndScreen);
-		GM->OnGameStart.AddDynamic(this, &AMyHUD::HideStartScreen);
+		GM->OnWinGame.AddUObject(this, &AMyHUD::ShowWinScreen);
+		GM->OnLoseGame.AddUObject(this, &AMyHUD::ShowLoseScreen);
+		GM->OnRestart.AddUObject(this, &AMyHUD::RemoveEndScreen);
+		GM->OnGameStart.AddUObject(this, &AMyHUD::HideStartScreen);
 	}
 }
 

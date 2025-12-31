@@ -11,8 +11,7 @@ void AMyGameModeBase::BeginPlay()
 {
     Super::BeginPlay();
 
-    OnGameStart.Broadcast();
-    GetWorldTimerManager().SetTimer(StartDelayTimer, this,&AMyGameModeBase::GameStart, 3.f, false);
+    GetWorldTimerManager().SetTimer(StartDelayTimer, this,&AMyGameModeBase::GameStart, TimeToStart, false);
     if (APlayerController* PC = GetWorld()->GetFirstPlayerController())
     {
         if (APawn* Pawn = PC->GetPawn())

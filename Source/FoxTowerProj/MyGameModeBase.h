@@ -8,33 +8,25 @@
 
 class UHealthComponent;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWinGame);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnLoseGame);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnRestart);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameStart);
-
 UCLASS()
 class FOXTOWERPROJ_API AMyGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	
 	public:
+
+		FSimpleMulticastDelegate OnWinGame;
+		FSimpleMulticastDelegate OnLoseGame;
+		FSimpleMulticastDelegate OnRestart;
+		FSimpleMulticastDelegate OnGameStart;
+
 		UFUNCTION()
 		void  AddEnemyCount();
 		UFUNCTION()
 		void  DecreaseEnemyCount();
 
-		UPROPERTY(BlueprintAssignable, Category = "Game state")
-		FOnWinGame OnWinGame;
-
-		UPROPERTY(BlueprintAssignable, Category = "Game state")
-		FOnLoseGame OnLoseGame;
-
-		UPROPERTY(BlueprintAssignable, Category = "Game state")
-		FOnRestart OnRestart;
-
-		UPROPERTY(BlueprintAssignable, Category = "Game state")
-		FOnGameStart OnGameStart;
+		UPROPERTY(BlueprintReadWrite,EditAnywhere, Category = "Time to start")
+		float TimeToStart = 3.f;
 	protected:
 		virtual void BeginPlay() override;
 

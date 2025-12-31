@@ -37,7 +37,7 @@ void AMyPlayerController::BeginPlay()
 	SetPlayerEnableState(false);
 	if (AMyGameModeBase* GM = Cast<AMyGameModeBase>(GetWorld()->GetAuthGameMode()))
 	{
-		GM->OnGameStart.AddDynamic(this, &AMyPlayerController::OnGameStarted);
+		GM->OnGameStart.AddUObject(this, &AMyPlayerController::OnGameStarted);
 	}
 
 }
