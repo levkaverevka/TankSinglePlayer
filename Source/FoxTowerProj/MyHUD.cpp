@@ -12,11 +12,14 @@
 void AMyHUD::BeginPlay()
 {
 	Super::BeginPlay();
+
+	ShowStartScreen();
 	if (AMyGameModeBase* GM = Cast<AMyGameModeBase>(GetWorld()->GetAuthGameMode()))
 	{
-		GM->OnWinGame.AddDynamic(this, &AMyHUD::ShowWinScreen);
-		GM->OnLoseGame.AddDynamic(this, &AMyHUD::ShowLoseScreen);
-		GM->OnRestart.AddDynamic(this, &AMyHUD::RemoveEndScreen);
+		GM->OnWinGame.AddUObject(this, &AMyHUD::ShowWinScreen);
+		GM->OnLoseGame.AddUObject(this, &AMyHUD::ShowLoseScreen);
+		GM->OnRestart.AddUObject(this, &AMyHUD::RemoveEndScreen);
+		GM->OnGameStart.AddUObject(this, &AMyHUD::HideStartScreen);
 	}
 }
 
@@ -50,6 +53,24 @@ void AMyHUD::RemoveEndScreen()
 	{
 		EndScreenWidget->RemoveFromParent();
 		EndScreenWidget = nullptr;
+	}
+}
+
+void AMyHUD::ShowStartScreen()
+{
+	if (!StartWidget)
+	{
+		StartWidget = CreateWidget(GetOwningPlayerController(), StartWidgetClass);
+		StartWidget->AddToViewport();
+	}
+}
+
+void AMyHUD::HideStartScreen()
+{
+	if (StartWidget)
+	{
+		StartWidget->RemoveFromParent();
+		StartWidget = nullptr;
 	}
 }
 

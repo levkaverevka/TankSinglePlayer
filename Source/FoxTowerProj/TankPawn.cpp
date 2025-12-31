@@ -8,6 +8,7 @@
 #include "Camera/CameraComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "MyPlayerController.h"
 
 
 ATankPawn::ATankPawn()
@@ -23,7 +24,7 @@ ATankPawn::ATankPawn()
 void ATankPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	AMyPlayerController* PlayerController = Cast<AMyPlayerController>(GetController());
 	if (PlayerController)
 	{
 		//EnhancedInput

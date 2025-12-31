@@ -19,4 +19,11 @@ class FOXTOWERPROJ_API AMyPlayerController : public APlayerController
 
 		UFUNCTION(BlueprintCallable)
 		void SetPlayerEnableState(bool bEnableState);
+
+		UFUNCTION()
+		void OnGameStarted();
+
+	protected:
+		virtual void BeginPlay() override;
+	private:
 };
