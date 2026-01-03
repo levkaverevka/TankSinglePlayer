@@ -9,7 +9,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Projectile.h"
+#include "ExplosionFX.h"
 #include "HealthComponent.h"
+#include "NiagaraComponent.h"
 
 
 DEFINE_LOG_CATEGORY(DeathLog);
@@ -31,6 +33,10 @@ ATurretPawn::ATurretPawn()
 	ProjectileSpawnComponent->SetupAttachment(TurretMesh);
 
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Component"));
+
+	MuzzleSmokeFX = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Muzzle Smoke VFX"));
+	MuzzleSmokeFX->SetAutoActivate(false);
+	MuzzleSmokeFX->SetupAttachment(ProjectileSpawnComponent);
 }
 
 
@@ -47,6 +53,10 @@ TArray<FName> ATurretPawn::GetMaterialSlotOptions()
 void ATurretPawn::OnDeathStarted(AActor* DeadActor, UHealthComponent* HealthComp)
 {
 	UE_LOG(DeathLog, Warning, TEXT("%s, is dead,  (HealthComp: %s) "), *DeadActor->GetName(), *HealthComp->GetName());
+	if (Explosion)
+	{
+		GetWorld()->SpawnActor<AExplosionFX>(Explosion, GetActorTransform());
+	}
 	Destroy();
 }
 
@@ -60,6 +70,10 @@ void ATurretPawn::RotateFunction(const FRotator& PredictedRotation, float DeltaT
 void ATurretPawn::Fire()
 {
 	SpawnProjectile();
+	if (MuzzleSmokeFX)
+	{
+		MuzzleSmokeFX->Activate();
+	}
 }
 
 void ATurretPawn::SpawnProjectile()

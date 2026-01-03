@@ -2,7 +2,7 @@
 
 
 #include "HealthComponent.h"
-
+#include "ExplosionFX.h"
 // Sets default values for this component's properties
 UHealthComponent::UHealthComponent()
 {
