@@ -2,6 +2,7 @@
 #include "Projectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include <Kismet/GameplayStatics.h>
+#include "Particles/ParticleSystem.h"
 
 
 // Sets default values
@@ -14,6 +15,8 @@ AProjectile::AProjectile()
 
 	ProjMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement Component"));
 	ProjMovement->InitialSpeed = 5000.f;
+
+	OnHitVFX = CreateDefaultSubobject<UParticleSystem>(TEXT("Hit VFX"));
 }
 
 // Called when the game starts or when spawned
@@ -25,6 +28,10 @@ void AProjectile::BeginPlay()
 
 void AProjectile::OnComponentHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
+	if (OnHitVFX)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), OnHitVFX, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
+	}
 	GetWorld()->DestroyActor(this, false, false);
 	UGameplayStatics::ApplyDamage(OtherActor, Damage, GetInstigatorController(), this, UDamageType::StaticClass());
 }

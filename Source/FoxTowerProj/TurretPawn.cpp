@@ -12,6 +12,8 @@
 #include "ExplosionFX.h"
 #include "HealthComponent.h"
 #include "NiagaraComponent.h"
+#include "NiagaraSystem.h"
+#include <NiagaraFunctionLibrary.h>
 
 
 DEFINE_LOG_CATEGORY(DeathLog);
@@ -34,9 +36,7 @@ ATurretPawn::ATurretPawn()
 
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Component"));
 
-	MuzzleSmokeFX = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Muzzle Smoke VFX"));
-	MuzzleSmokeFX->SetAutoActivate(false);
-	MuzzleSmokeFX->SetupAttachment(ProjectileSpawnComponent);
+	MuzzleSmokeFX = CreateDefaultSubobject<UNiagaraSystem>(TEXT("Muzzle Smoke VFX"));
 }
 
 
@@ -72,7 +72,7 @@ void ATurretPawn::Fire()
 	SpawnProjectile();
 	if (MuzzleSmokeFX)
 	{
-		MuzzleSmokeFX->Activate();
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), MuzzleSmokeFX, ProjectileSpawnComponent->GetComponentLocation(), ProjectileSpawnComponent->GetComponentRotation(), FVector(0.1f));
 	}
 }
 

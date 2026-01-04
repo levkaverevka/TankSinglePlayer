@@ -7,6 +7,7 @@
 #include "Projectile.generated.h"
 
 class UProjectileMovementComponent;
+class UParticleSystem;
 UCLASS()
 class FOXTOWERPROJ_API AProjectile : public AActor
 {
@@ -22,6 +23,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UStaticMeshComponent> ProjectileMesh;
+
+	UPROPERTY(EditDefaultsOnly,Category = "VFX")
+	UParticleSystem* OnHitVFX;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Damage")
 	float Damage = 25.f;

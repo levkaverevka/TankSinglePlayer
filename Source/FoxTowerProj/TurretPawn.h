@@ -13,6 +13,8 @@ class UInputComponent;
 class UMaterialInstanceDynamic;
 class UHealthComponent;
 class UNiagaraComponent;
+class UNiagaraSystem;
+
 
 
 DECLARE_LOG_CATEGORY_EXTERN(DeathLog, Warning, All);
@@ -65,7 +67,7 @@ protected:
 	TSubclassOf<class AProjectile> Projectile;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
-	UNiagaraComponent* MuzzleSmokeFX;
+	UNiagaraSystem* MuzzleSmokeFX;
 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite, Category = "VFX")
 	TSubclassOf<class AExplosionFX> Explosion;
