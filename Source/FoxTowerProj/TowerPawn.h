@@ -39,6 +39,7 @@ protected:
 	
 	FTimerHandle FireTimer;
 	FTimerHandle NullPawnTimer;
+	UPROPERTY()
 	APawn* CurrentTarget = nullptr;
 
 };

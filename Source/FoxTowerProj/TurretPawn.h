@@ -69,8 +69,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
 	UNiagaraSystem* MuzzleSmokeFX;
 
-	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite, Category = "VFX")
-	TSubclassOf<class AExplosionFX> Explosion;
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "VFX")
+	UNiagaraComponent* ExplosionComponent;
 
 	UFUNCTION()
 	static TArray<FName> GetMaterialSlotOptions();
@@ -78,5 +78,7 @@ protected:
 	UFUNCTION()
 	virtual void OnDeathStarted(AActor* DeadActor, UHealthComponent* HealthComp);
 
-
+private:
+	/*UPROPERTY(EditDefaultsOnly, Category = "Death")
+	float DestroyDelay = 2.0f;*/
 };

@@ -15,8 +15,6 @@ AProjectile::AProjectile()
 
 	ProjMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement Component"));
 	ProjMovement->InitialSpeed = 5000.f;
-
-	OnHitVFX = CreateDefaultSubobject<UParticleSystem>(TEXT("Hit VFX"));
 }
 
 // Called when the game starts or when spawned
