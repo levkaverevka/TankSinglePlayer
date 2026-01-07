@@ -12,6 +12,10 @@ class USceneComponent;
 class UInputComponent;
 class UMaterialInstanceDynamic;
 class UHealthComponent;
+class UNiagaraComponent;
+class UNiagaraSystem;
+
+
 
 DECLARE_LOG_CATEGORY_EXTERN(DeathLog, Warning, All);
 
@@ -62,11 +66,19 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile")
 	TSubclassOf<class AProjectile> Projectile;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
+	UNiagaraSystem* MuzzleSmokeFX;
+
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "VFX")
+	UNiagaraComponent* ExplosionComponent;
+
 	UFUNCTION()
 	static TArray<FName> GetMaterialSlotOptions();
 
 	UFUNCTION()
 	virtual void OnDeathStarted(AActor* DeadActor, UHealthComponent* HealthComp);
 
-
+private:
+	/*UPROPERTY(EditDefaultsOnly, Category = "Death")
+	float DestroyDelay = 2.0f;*/
 };

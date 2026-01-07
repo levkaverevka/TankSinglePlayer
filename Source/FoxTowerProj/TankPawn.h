@@ -12,6 +12,7 @@ class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
 class UInputComponent;
+class UNiagaraComponent;
 /**
  * 
  */
@@ -49,6 +50,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UCameraComponent> Camera;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "VFX")
+	UNiagaraComponent* DustFX;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputMappingContext* TankIMC;
@@ -61,9 +65,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* FireAction;
-
-	/*UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category= "Projectile")
-	TSubclassOf<class AProjectile> Projectile;*/
 
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float AccelerationSpeed = 5.f; 

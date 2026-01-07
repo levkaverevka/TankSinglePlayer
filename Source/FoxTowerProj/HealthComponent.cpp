@@ -2,7 +2,6 @@
 
 
 #include "HealthComponent.h"
-
 // Sets default values for this component's properties
 UHealthComponent::UHealthComponent()
 {
@@ -17,7 +16,6 @@ void UHealthComponent::BeginPlay()
 	Super::BeginPlay();
 	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::HandleDamage);
 	CurrentHealth = MaxHealth;
-	
 }
 
 void UHealthComponent::HandleDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)

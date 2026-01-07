@@ -9,6 +9,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "MyPlayerController.h"
+#include "NiagaraComponent.h"
+#include "NiagaraSystem.h"
 
 
 ATankPawn::ATankPawn()
@@ -19,6 +21,10 @@ ATankPawn::ATankPawn()
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
+
+	DustFX = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Dust Spawn Component"));
+	DustFX->SetupAttachment(CapsuleComponent);
+	DustFX->SetAutoActivate(false);
 }
 
 void ATankPawn::BeginPlay()
@@ -65,7 +71,6 @@ void ATankPawn::Tick(float DeltaTime)
 void ATankPawn::Move(const FInputActionValue& Value)
 {
 	MoveValue = Value.Get<float>();
-	//UE_LOG(LogTemp, Warning, TEXT("MoveValue %f"), MoveValue);
 }
 
 void ATankPawn::OnMoveReleased(const FInputActionValue& Value)
@@ -81,6 +86,17 @@ void ATankPawn::MoveActor()
 	CurrentSpeed = FMath::FInterpTo(CurrentSpeed, TargetSpeed, DeltaTime, InterpSpeed);
 	ForwardMove = FVector(CurrentSpeed * DeltaTime, 0.f, 0.f);
 	AddActorLocalOffset(ForwardMove, false);
+	if (CurrentSpeed != 0)
+	{
+		if (!DustFX->IsActive())
+		{
+			DustFX->Activate();
+		}
+	}
+	else
+	{
+		DustFX->Deactivate();
+	}
 }
 
 void ATankPawn::Turn(const FInputActionValue& Value)

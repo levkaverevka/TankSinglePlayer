@@ -7,6 +7,7 @@
 #include "Projectile.generated.h"
 
 class UProjectileMovementComponent;
+class UParticleSystem;
 UCLASS()
 class FOXTOWERPROJ_API AProjectile : public AActor
 {
@@ -15,13 +16,18 @@ class FOXTOWERPROJ_API AProjectile : public AActor
 public:	
 	AProjectile();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	TObjectPtr<UProjectileMovementComponent> ProjMovement;
+	
 protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<UProjectileMovementComponent> ProjMovement;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UStaticMeshComponent> ProjectileMesh;
+
+	UPROPERTY(EditDefaultsOnly,Category = "VFX")
+	UParticleSystem* OnHitVFX;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Damage")
 	float Damage = 25.f;

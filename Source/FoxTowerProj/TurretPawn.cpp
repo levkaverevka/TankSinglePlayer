@@ -10,6 +10,9 @@
 #include "Camera/CameraComponent.h"
 #include "Projectile.h"
 #include "HealthComponent.h"
+#include "NiagaraComponent.h"
+#include "NiagaraSystem.h"
+#include <NiagaraFunctionLibrary.h>
 
 
 DEFINE_LOG_CATEGORY(DeathLog);
@@ -31,6 +34,11 @@ ATurretPawn::ATurretPawn()
 	ProjectileSpawnComponent->SetupAttachment(TurretMesh);
 
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Component"));
+
+	ExplosionComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Death ExplosionComponent"));
+	ExplosionComponent->SetupAttachment(CapsuleComponent);
+	ExplosionComponent->SetAutoActivate(false);
+	ExplosionComponent->SetRelativeRotation(FRotator(90.f, 0.f, 0.f));
 }
 
 
@@ -47,6 +55,11 @@ TArray<FName> ATurretPawn::GetMaterialSlotOptions()
 void ATurretPawn::OnDeathStarted(AActor* DeadActor, UHealthComponent* HealthComp)
 {
 	UE_LOG(DeathLog, Warning, TEXT("%s, is dead,  (HealthComp: %s) "), *DeadActor->GetName(), *HealthComp->GetName());
+	if (ExplosionComponent)
+	{
+		ExplosionComponent->Activate(); 
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionComponent->GetAsset(), ExplosionComponent->GetComponentLocation(), ExplosionComponent->GetComponentRotation(),ExplosionComponent->GetComponentScale());
+	}
 	Destroy();
 }
 
@@ -60,6 +73,10 @@ void ATurretPawn::RotateFunction(const FRotator& PredictedRotation, float DeltaT
 void ATurretPawn::Fire()
 {
 	SpawnProjectile();
+	if (MuzzleSmokeFX)
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), MuzzleSmokeFX, ProjectileSpawnComponent->GetComponentLocation(), ProjectileSpawnComponent->GetComponentRotation(), FVector(0.1f));
+	}
 }
 
 void ATurretPawn::SpawnProjectile()
