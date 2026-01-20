@@ -3,6 +3,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include <Kismet/GameplayStatics.h>
 #include "Particles/ParticleSystem.h"
+#include "TurretPawn.h"
 
 
 // Sets default values

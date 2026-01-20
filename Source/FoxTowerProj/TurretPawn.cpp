@@ -13,6 +13,10 @@
 #include "NiagaraComponent.h"
 #include "NiagaraSystem.h"
 #include <NiagaraFunctionLibrary.h>
+#include <Components/AudioComponent.h>
+#include "Kismet/GameplayStatics.h"
+#include "Components/AudioComponent.h"
+
 
 
 DEFINE_LOG_CATEGORY(DeathLog);
@@ -59,6 +63,7 @@ void ATurretPawn::OnDeathStarted(AActor* DeadActor, UHealthComponent* HealthComp
 	{
 		ExplosionComponent->Activate(); 
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionComponent->GetAsset(), ExplosionComponent->GetComponentLocation(), ExplosionComponent->GetComponentRotation(),ExplosionComponent->GetComponentScale());
+		UGameplayStatics::PlaySoundAtLocation(this, DeathSound, DeadActor->GetActorLocation() );
 	}
 	Destroy();
 }
@@ -76,6 +81,7 @@ void ATurretPawn::Fire()
 	if (MuzzleSmokeFX)
 	{
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), MuzzleSmokeFX, ProjectileSpawnComponent->GetComponentLocation(), ProjectileSpawnComponent->GetComponentRotation(), FVector(0.1f));
+		UGameplayStatics::PlaySoundAtLocation(this, ShootSound, ProjectileSpawnComponent->GetComponentLocation());
 	}
 }
 
@@ -83,7 +89,8 @@ void ATurretPawn::SpawnProjectile()
 {
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.Owner = this;
-	GetWorld()->SpawnActor<AActor>(Projectile.Get(), ProjectileSpawnComponent->GetComponentLocation(), ProjectileSpawnComponent->GetComponentRotation(), SpawnParams);
+	AProjectile* ProjectileFired = GetWorld()->SpawnActor<AProjectile>(Projectile.Get(), ProjectileSpawnComponent->GetComponentLocation(), ProjectileSpawnComponent->GetComponentRotation(), SpawnParams);
+	OnProjectileFired.Broadcast(ProjectileFired, this);
 }
 
 void ATurretPawn::BeginPlay()
