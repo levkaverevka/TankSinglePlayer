@@ -66,7 +66,7 @@ void ATowerPawn::Tick(float DeltaTime)
 		FVector MuzlleLocation = TurretMesh->GetComponentLocation();
 		FVector Direction = TargetLocation - TurretMesh->GetComponentLocation();
 		const AProjectile* DefaultProj = Projectile.GetDefaultObject();
-		float ProjSpeed = DefaultProj->ProjMovement->InitialSpeed;
+		float ProjSpeed = DefaultProj->GetProjMovement()->InitialSpeed;
 		FVector TargetVelocity = CurrentTarget->GetVelocity();
 		float Distance = Direction.Size();
 		float TimeToHit = Distance / ProjSpeed;

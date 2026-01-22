@@ -33,17 +33,16 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnProjectileFired OnProjectileFired;
-
-	virtual void BeginPlay() override;
+	
 	virtual void PostInitializeComponents() override;
 	void Fire();
 
-	USceneComponent* GetProjectileSpawnComponent()
+	USceneComponent* GetProjectileSpawnComponent() const
 	{
 		return ProjectileSpawnComponent.Get();
 	}
 protected:
-
+	virtual void BeginPlay() override;
 	void RotateFunction(const FRotator& LookAtRotation, float DeltaTime, float InterpSpeed);
 	void SpawnProjectile();
 

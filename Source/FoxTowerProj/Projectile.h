@@ -16,11 +16,18 @@ class FOXTOWERPROJ_API AProjectile : public AActor
 public:	
 	AProjectile();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	TObjectPtr<UProjectileMovementComponent> ProjMovement;
+	UFUNCTION()
+	UProjectileMovementComponent* GetProjMovement() const
+	{
+		return ProjMovement;
+	}
+
 protected:
 	virtual void BeginPlay() override;
-	
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<UProjectileMovementComponent> ProjMovement;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UStaticMeshComponent> ProjectileMesh;
 
