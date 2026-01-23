@@ -14,10 +14,14 @@ class UMaterialInstanceDynamic;
 class UHealthComponent;
 class UNiagaraComponent;
 class UNiagaraSystem;
-
+class UAudioComponent;
+class AProjectile;
+class APawn;
 
 
 DECLARE_LOG_CATEGORY_EXTERN(DeathLog, Warning, All);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProjectileFired, AProjectile*, Projectile, ATurretPawn*, Owner);
 
 UCLASS(ABSTRACT)
 class FOXTOWERPROJ_API ATurretPawn : public APawn
@@ -27,12 +31,18 @@ class FOXTOWERPROJ_API ATurretPawn : public APawn
 public:
 	ATurretPawn();
 
-	virtual void BeginPlay() override;
+	UPROPERTY(BlueprintAssignable)
+	FOnProjectileFired OnProjectileFired;
+	
 	virtual void PostInitializeComponents() override;
 	void Fire();
 
+	USceneComponent* GetProjectileSpawnComponent() const
+	{
+		return ProjectileSpawnComponent.Get();
+	}
 protected:
-
+	virtual void BeginPlay() override;
 	void RotateFunction(const FRotator& LookAtRotation, float DeltaTime, float InterpSpeed);
 	void SpawnProjectile();
 
@@ -71,6 +81,12 @@ protected:
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "VFX")
 	UNiagaraComponent* ExplosionComponent;
+
+	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = "SFX")
+	USoundBase* ShootSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SFX")
+	USoundBase* DeathSound;
 
 	UFUNCTION()
 	static TArray<FName> GetMaterialSlotOptions();

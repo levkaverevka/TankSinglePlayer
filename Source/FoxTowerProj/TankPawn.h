@@ -13,6 +13,7 @@ class UInputMappingContext;
 class UInputAction;
 class UInputComponent;
 class UNiagaraComponent;
+class UAudioComponent;
 /**
  * 
  */
@@ -77,5 +78,11 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Speed")
 	float RotationSpeed;
+
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "SFX")
+	UAudioComponent* MoveSfxComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SFX")
+	USoundBase* MoveSound;
 
 };

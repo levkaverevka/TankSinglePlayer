@@ -11,6 +11,7 @@
 #include "MyPlayerController.h"
 #include "NiagaraComponent.h"
 #include "NiagaraSystem.h"
+#include "Components/AudioComponent.h"
 
 
 ATankPawn::ATankPawn()
@@ -25,6 +26,10 @@ ATankPawn::ATankPawn()
 	DustFX = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Dust Spawn Component"));
 	DustFX->SetupAttachment(CapsuleComponent);
 	DustFX->SetAutoActivate(false);
+
+	MoveSfxComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("Movement sound"));
+	MoveSfxComponent->SetupAttachment(ProjectileSpawnComponent);
+	MoveSfxComponent->SetAutoActivate(false);
 }
 
 void ATankPawn::BeginPlay()
@@ -80,6 +85,10 @@ void ATankPawn::OnMoveReleased(const FInputActionValue& Value)
 
 void ATankPawn::MoveActor()
 {
+	if (!MoveSfxComponent->IsPlaying() && CurrentSpeed > 0)
+	{
+		MoveSfxComponent->Play();
+	}
 	float DeltaTime = GetWorld()->GetDeltaSeconds();
 	TargetSpeed = MoveValue * MoveSpeed;
 	float InterpSpeed = (FMath::Abs(CurrentSpeed) < FMath::Abs(TargetSpeed)) ? AccelerationSpeed : DecelerationSpeed;
@@ -91,11 +100,13 @@ void ATankPawn::MoveActor()
 		if (!DustFX->IsActive())
 		{
 			DustFX->Activate();
+			
 		}
 	}
 	else
 	{
 		DustFX->Deactivate();
+		MoveSfxComponent->Stop();
 	}
 }
 

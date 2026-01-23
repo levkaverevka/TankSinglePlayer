@@ -16,7 +16,12 @@ class FOXTOWERPROJ_API AProjectile : public AActor
 public:	
 	AProjectile();
 
-	
+	UFUNCTION()
+	UProjectileMovementComponent* GetProjMovement() const
+	{
+		return ProjMovement;
+	}
+
 protected:
 	virtual void BeginPlay() override;
 
