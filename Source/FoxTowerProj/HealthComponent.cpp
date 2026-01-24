@@ -2,6 +2,7 @@
 
 
 #include "HealthComponent.h"
+#include "MyGameState.h"
 // Sets default values for this component's properties
 UHealthComponent::UHealthComponent()
 {

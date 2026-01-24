@@ -35,7 +35,7 @@ protected:
 	void ShootShake(AProjectile* Projectile, ATurretPawn* Owner);
 
 	UFUNCTION()
-	void DeathShake(AActor* DeadActor, UHealthComponent* HealthComp);
+	void DeathShake();
 
 private:
 	AMyPlayerController* PC = nullptr;

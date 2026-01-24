@@ -8,6 +8,7 @@
 #include "TankPawn.h"
 #include "Projectile.h"
 #include "HealthComponent.h"
+#include "MyGameState.h"
 
 
 // Sets default values for this component's properties
@@ -36,7 +37,10 @@ void UCameraShakeComponent::BeginPlay()
 			UE_LOG(LogTemp, Warning, TEXT("PC: %s, TankPawn: %s"), PC ? TEXT("Valid") : TEXT("NULL"), TankPawn ? TEXT("Valid") : TEXT("NULL"))
 		}
 	}
-	
+	if (AMyGameState* GameState = GetWorld()->GetGameState<AMyGameState>())
+	{
+		GameState->OnTurretDeath.AddUObject(this, &UCameraShakeComponent::DeathShake);
+	}
 
 }
 
@@ -46,7 +50,7 @@ void UCameraShakeComponent::ShootShake(AProjectile* Projectile, ATurretPawn* Own
 	UE_LOG(LogTemp, Warning, TEXT("ShootShake called, Class: %s"), OnShootShakeClass ? TEXT("Valid") : TEXT("NULL"));
 }
 
-void UCameraShakeComponent::DeathShake(AActor* DeadActor, UHealthComponent* HealthComp)
+void UCameraShakeComponent::DeathShake()
 {
 	if (PC)
 	{
