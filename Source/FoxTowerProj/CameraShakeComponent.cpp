@@ -31,15 +31,15 @@ void UCameraShakeComponent::BeginPlay()
 
 	if (PC)
 	{
-		if (ATankPawn* TankPawn = Cast<ATankPawn>(PC->GetPawn()))
+		if (ATurretPawn* TurretPawn = Cast<ATurretPawn>(PC->GetPawn()))
 		{
-			TankPawn->OnProjectileFired.AddDynamic(this, &UCameraShakeComponent::ShootShake);
-			UE_LOG(LogTemp, Warning, TEXT("PC: %s, TankPawn: %s"), PC ? TEXT("Valid") : TEXT("NULL"), TankPawn ? TEXT("Valid") : TEXT("NULL"))
+			TurretPawn->OnProjectileFired.AddDynamic(this, &UCameraShakeComponent::ShootShake);
+			UE_LOG(LogTemp, Warning, TEXT("PC: %s, TurretPawn: %s"), PC ? TEXT("Valid") : TEXT("NULL"), TurretPawn ? TEXT("Valid") : TEXT("NULL"))
 		}
 	}
 	if (AMyGameState* GameState = GetWorld()->GetGameState<AMyGameState>())
 	{
-		GameState->OnTurretDeath.AddUObject(this, &UCameraShakeComponent::DeathShake);
+		GameState->OnTurretDeath.AddDynamic(this, &UCameraShakeComponent::DeathShake);
 	}
 
 }
@@ -50,7 +50,7 @@ void UCameraShakeComponent::ShootShake(AProjectile* Projectile, ATurretPawn* Own
 	UE_LOG(LogTemp, Warning, TEXT("ShootShake called, Class: %s"), OnShootShakeClass ? TEXT("Valid") : TEXT("NULL"));
 }
 
-void UCameraShakeComponent::DeathShake()
+void UCameraShakeComponent::DeathShake(AActor* DeadActor)
 {
 	if (PC)
 	{

@@ -6,6 +6,6 @@
 
 void AMyGameState::TurretDeath(AActor* DeadActor, UHealthComponent* HealthComp)
 {
-	OnTurretDeath.Broadcast();
+	OnTurretDeath.Broadcast(DeadActor);
 	UE_LOG(LogTemp, Warning, TEXT("Game state TurretDeath"));
 }

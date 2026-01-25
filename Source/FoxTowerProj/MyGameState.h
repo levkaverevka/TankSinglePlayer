@@ -10,13 +10,16 @@
  * 
  */
 class UHealthComponent;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTurretDeath, AActor*, DeadActor);
 UCLASS()
 class FOXTOWERPROJ_API AMyGameState : public AGameStateBase
 {
 	GENERATED_BODY()
 	
 public:
-	FSimpleMulticastDelegate OnTurretDeath;
+	UPROPERTY(BlueprintAssignable, Category = "Health")
+	FOnTurretDeath OnTurretDeath;
 
 	UFUNCTION()
 	void TurretDeath(AActor* DeadActor, UHealthComponent* HealthComp);
