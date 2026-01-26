@@ -16,6 +16,7 @@
 #include <Components/AudioComponent.h>
 #include "Kismet/GameplayStatics.h"
 #include "Components/AudioComponent.h"
+#include "MyGameState.h"
 
 
 
@@ -97,6 +98,10 @@ void ATurretPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	HealthComponent->OnDeath.AddDynamic(this, &ATurretPawn::OnDeathStarted);
+	if (AMyGameState* GameState = GetWorld()->GetGameState<AMyGameState>())
+	{
+		HealthComponent->OnDeath.AddDynamic(GameState, &AMyGameState::TurretDeath);
+	}
 }
 
 void ATurretPawn::PostInitializeComponents()
