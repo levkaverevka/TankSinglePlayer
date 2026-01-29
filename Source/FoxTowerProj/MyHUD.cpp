@@ -83,8 +83,12 @@ void AMyHUD::HideStartScreen()
 
 void AMyHUD::ShowHealthBar(AActor* DamagedActor, float CurrentHealth)
 {
+	UE_LOG(LogTemp, Warning, TEXT("ShowHealthbar HUD Works"));
+
 	if (HealthWidget)
 	{
 		HealthWidget->AddToViewport(5);
+		UE_LOG(LogTemp, Warning, TEXT("ADd to viewport HUD Works"));
+
 	}
 }
