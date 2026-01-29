@@ -7,6 +7,7 @@
 #include "TankPawn.h"
 #include "TowerPawn.h"
 #include "MyGameModeBase.h"
+#include "HealthWidget.h"
 
 
 void AMyHUD::BeginPlay()
@@ -21,6 +22,11 @@ void AMyHUD::BeginPlay()
 		GM->OnRestart.AddUObject(this, &AMyHUD::RemoveEndScreen);
 		GM->OnGameStart.AddUObject(this, &AMyHUD::HideStartScreen);
 	}
+	HealthWidget = CreateWidget<UHealthWidget>(GetWorld(), HealthWidgetClass);
+	if (HealthWidget)
+	{
+		HealthWidget->OnHealthUpdated.AddDynamic(this, &AMyHUD::ShowHealthBar);
+	}
 }
 
 void AMyHUD::ShowLoseScreen()
@@ -34,6 +40,7 @@ void AMyHUD::ShowLoseScreen()
 		}
 	}
 }
+
 
 void AMyHUD::ShowWinScreen()
 {
@@ -74,3 +81,10 @@ void AMyHUD::HideStartScreen()
 	}
 }
 
+void AMyHUD::ShowHealthBar(AActor* DamagedActor, float CurrentHealth)
+{
+	if (HealthWidget)
+	{
+		HealthWidget->AddToViewport(5);
+	}
+}

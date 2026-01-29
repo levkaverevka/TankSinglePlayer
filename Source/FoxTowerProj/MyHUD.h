@@ -11,6 +11,7 @@
  */
 class UUserWidget;
 class UHealthComponent;
+class UHealthWidget;
 UCLASS()
 class FOXTOWERPROJ_API AMyHUD : public AHUD
 {
@@ -31,6 +32,9 @@ class FOXTOWERPROJ_API AMyHUD : public AHUD
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 		TSubclassOf<UUserWidget> StartWidgetClass;
 
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+		TSubclassOf<UUserWidget> HealthWidgetClass;
+
 		UPROPERTY()
 		UHealthComponent* HealthComponent;
 
@@ -49,8 +53,12 @@ class FOXTOWERPROJ_API AMyHUD : public AHUD
 		UFUNCTION(BlueprintCallable)
 		void HideStartScreen();
 
+		UFUNCTION(BlueprintCallable)
+		void ShowHealthBar(AActor* DamagedActor, float CurrentHealth);
+
 	private:
 		UUserWidget* EndScreenWidget = nullptr;
 		UUserWidget* StartWidget = nullptr;
+		UHealthWidget* HealthWidget = nullptr;
 
 };
