@@ -12,7 +12,6 @@
 
 class UHealthComponent;
 class UProgressBar;
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthUpdated, AActor*, DamagedActor, float, CurrentHealth);
 
 UCLASS()
@@ -25,10 +24,12 @@ public:
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
+	virtual void NativeOnInitialized();
 
 	UFUNCTION()
 	void OnHealthChanged(AActor* DamagedActor, float CurrentHealth);
 
+	/*UDUNCTION(AActor* DamagedActor, float CurrentHealth, ESenderTypes Type)*/
 private:
 	UPROPERTY()
 	UHealthComponent* HealthComp;

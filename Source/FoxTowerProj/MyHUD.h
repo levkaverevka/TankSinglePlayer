@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
+#include "SenderTypes.h"
 #include "MyHUD.generated.h"
 
 /**
@@ -35,8 +36,14 @@ class FOXTOWERPROJ_API AMyHUD : public AHUD
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 		TSubclassOf<UUserWidget> HealthWidgetClass;
 
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+		TSubclassOf<UUserWidget> AmmoWidgetClass;
+
 		UPROPERTY()
 		UHealthComponent* HealthComponent;
+
+		UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Time to start")
+		float TimeToDissappear = 3.f;
 
 		UFUNCTION(BlueprintCallable)
 		void ShowLoseScreen();
@@ -56,9 +63,28 @@ class FOXTOWERPROJ_API AMyHUD : public AHUD
 		UFUNCTION(BlueprintCallable)
 		void ShowHealthBar(AActor* DamagedActor, float CurrentHealth);
 
+		UFUNCTION(BlueprintCallable)
+		void HideHealthBar();
+
+		UFUNCTION(BlueprintCallable)
+		void ShowAmmo();
+
+		UFUNCTION(BlueprintCallable)
+		void HideAmmo();
+
+		UFUNCTION(BlueprintCallable)
+		void HideWidgetDelay(ESenderTypes Type);
+
 	private:
+		UPROPERTY()
 		UUserWidget* EndScreenWidget = nullptr;
+		UPROPERTY()
 		UUserWidget* StartWidget = nullptr;
+		UPROPERTY()
 		UHealthWidget* HealthWidget = nullptr;
+		/*UPROPERTY()
+		Ammo* AmmoWidget = nullptr;*/
+		UPROPERTY()
+		FTimerHandle WidgetDisappearDelay;
 
 };

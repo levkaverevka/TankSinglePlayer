@@ -8,7 +8,7 @@
 void UHealthWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-	APlayerController* PC = GetOwningPlayer();
+	/*APlayerController* PC = GetOwningPlayer();
 	if (!PC)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Owning player is nullptr"));
@@ -17,7 +17,23 @@ void UHealthWidget::NativeConstruct()
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Owning player exists"));
+	}*/
+	
+}
+
+void UHealthWidget::NativeDestruct()
+{
+	Super::NativeDestruct();
+
+	if (HealthComp)
+	{
+		HealthComp->OnDamage.RemoveDynamic(this, &UHealthWidget::OnHealthChanged);
 	}
+}
+
+void UHealthWidget::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
 	if (APawn* Pawn = GetOwningPlayer()->GetPawn())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Pawn from player exists"));
@@ -28,16 +44,6 @@ void UHealthWidget::NativeConstruct()
 			HealthComp->OnDamage.AddDynamic(this, &UHealthWidget::OnHealthChanged);
 			UE_LOG(LogTemp, Warning, TEXT("HealthComp exists"));
 		}
-	}
-}
-
-void UHealthWidget::NativeDestruct()
-{
-	Super::NativeDestruct();
-
-	if (HealthComp)
-	{
-		HealthComp->OnDamage.RemoveDynamic(this, &UHealthWidget::OnHealthChanged);
 	}
 }
 

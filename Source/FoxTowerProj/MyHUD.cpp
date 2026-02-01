@@ -26,6 +26,8 @@ void AMyHUD::BeginPlay()
 	if (HealthWidget)
 	{
 		HealthWidget->OnHealthUpdated.AddDynamic(this, &AMyHUD::ShowHealthBar);
+		HealthWidget->AddToViewport();
+		HealthWidget->SetVisibility(ESlateVisibility::Hidden);
 	}
 }
 
@@ -83,12 +85,39 @@ void AMyHUD::HideStartScreen()
 
 void AMyHUD::ShowHealthBar(AActor* DamagedActor, float CurrentHealth)
 {
-	UE_LOG(LogTemp, Warning, TEXT("ShowHealthbar HUD Works"));
-
 	if (HealthWidget)
 	{
-		HealthWidget->AddToViewport(5);
+		HealthWidget->SetVisibility(ESlateVisibility::Visible);
 		UE_LOG(LogTemp, Warning, TEXT("ADd to viewport HUD Works"));
-
+		HideWidgetDelay(ESenderTypes::FromHealthWidget);
 	}
 }
+
+void AMyHUD::HideHealthBar()
+{
+	if (HealthWidget)
+	{
+		HealthWidget->SetVisibility(ESlateVisibility::Hidden);
+	}
+}
+
+void AMyHUD::ShowAmmo()
+{
+}
+
+void AMyHUD::HideAmmo()
+{
+}
+
+void AMyHUD::HideWidgetDelay(ESenderTypes Type)
+{
+	if (Type == ESenderTypes::FromTank)
+	{
+		GetWorldTimerManager().SetTimer(WidgetDisappearDelay, this, &AMyHUD::HideAmmo, TimeToDissappear, false);
+	}
+	else if (Type == ESenderTypes::FromHealthWidget)
+	{
+		GetWorldTimerManager().SetTimer(WidgetDisappearDelay, this, &AMyHUD::HideHealthBar, TimeToDissappear, false);
+	}
+}
+
