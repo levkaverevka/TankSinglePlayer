@@ -12,7 +12,7 @@
 
 class UHealthComponent;
 class UProgressBar;
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthUpdated, AActor*, DamagedActor, float, CurrentHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthUpdated, AActor*, DamagedActor,float, CurrentHealth);
 
 UCLASS()
 class FOXTOWERPROJ_API UHealthWidget : public UUserWidget

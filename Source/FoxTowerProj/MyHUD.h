@@ -13,6 +13,8 @@
 class UUserWidget;
 class UHealthComponent;
 class UHealthWidget;
+class UAmmoCountWidget;
+class UEnemyAmount;
 UCLASS()
 class FOXTOWERPROJ_API AMyHUD : public AHUD
 {
@@ -33,11 +35,17 @@ class FOXTOWERPROJ_API AMyHUD : public AHUD
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 		TSubclassOf<UUserWidget> StartWidgetClass;
 
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	/*	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 		TSubclassOf<UUserWidget> HealthWidgetClass;
 
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-		TSubclassOf<UUserWidget> AmmoWidgetClass;
+		TSubclassOf<UUserWidget> AmmoCountWidgetClass;
+
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+		TSubclassOf<UUserWidget> EnemyCountWidgetClass;*/
+
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+		TSubclassOf<UUserWidget> MasterWidgetClass;
 
 		UPROPERTY()
 		UHealthComponent* HealthComponent;
@@ -60,20 +68,26 @@ class FOXTOWERPROJ_API AMyHUD : public AHUD
 		UFUNCTION(BlueprintCallable)
 		void HideStartScreen();
 
-		UFUNCTION(BlueprintCallable)
+	/*	UFUNCTION(BlueprintCallable)
 		void ShowHealthBar(AActor* DamagedActor, float CurrentHealth);
 
 		UFUNCTION(BlueprintCallable)
 		void HideHealthBar();
 
 		UFUNCTION(BlueprintCallable)
-		void ShowAmmo();
+		void ShowAmmo(int32 AmmoCount);
 
 		UFUNCTION(BlueprintCallable)
 		void HideAmmo();
 
 		UFUNCTION(BlueprintCallable)
-		void HideWidgetDelay(ESenderTypes Type);
+		void ShowEnemyCount(int32 NewEnemyCount);
+
+		UFUNCTION(BlueprintCallable)
+		void HideEnemyCount();*/
+
+		/*UFUNCTION(BlueprintCallable)
+		void HideWidgetDelay(ESenderTypes Type);*/
 
 	private:
 		UPROPERTY()
@@ -81,9 +95,13 @@ class FOXTOWERPROJ_API AMyHUD : public AHUD
 		UPROPERTY()
 		UUserWidget* StartWidget = nullptr;
 		UPROPERTY()
-		UHealthWidget* HealthWidget = nullptr;
-		/*UPROPERTY()
-		Ammo* AmmoWidget = nullptr;*/
+		UMasterWidget* MasterWidget;
+		UPROPERTY()
+		UHealthWidget* HealthWidget;
+		UPROPERTY()
+		UAmmoCountWidget* AmmoWidget;
+		UPROPERTY()
+		UEnemyAmount* EnemyCountWidget;
 		UPROPERTY()
 		FTimerHandle WidgetDisappearDelay;
 

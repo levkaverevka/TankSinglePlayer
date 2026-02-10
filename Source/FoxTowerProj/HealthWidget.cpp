@@ -4,20 +4,11 @@
 #include "HealthWidget.h"
 #include "HealthComponent.h"
 #include <Components/ProgressBar.h>
+#include "AmmoCountWidget.h"
 
 void UHealthWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-	/*APlayerController* PC = GetOwningPlayer();
-	if (!PC)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Owning player is nullptr"));
-		return;
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Owning player exists"));
-	}*/
 	
 }
 
@@ -30,6 +21,7 @@ void UHealthWidget::NativeDestruct()
 		HealthComp->OnDamage.RemoveDynamic(this, &UHealthWidget::OnHealthChanged);
 	}
 }
+
 
 void UHealthWidget::NativeOnInitialized()
 {
@@ -47,7 +39,7 @@ void UHealthWidget::NativeOnInitialized()
 	}
 }
 
-void UHealthWidget::OnHealthChanged(AActor* DamagedActor, float CurrentHealth)
+void UHealthWidget::OnHealthChanged(AActor* DamagedActor,float CurrentHealth)
 {
 	float Percent = CurrentHealth / HealthComp->GetMaxHealth();
 	HealthBar->SetPercent(Percent);

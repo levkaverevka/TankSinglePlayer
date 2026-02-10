@@ -8,7 +8,9 @@
 #include "TowerPawn.h"
 #include "MyGameModeBase.h"
 #include "HealthWidget.h"
-
+#include "AmmoCountWidget.h"
+#include "EnemyAmount.h"
+#include "MasterWidget.h"
 
 void AMyHUD::BeginPlay()
 {
@@ -22,13 +24,27 @@ void AMyHUD::BeginPlay()
 		GM->OnRestart.AddUObject(this, &AMyHUD::RemoveEndScreen);
 		GM->OnGameStart.AddUObject(this, &AMyHUD::HideStartScreen);
 	}
-	HealthWidget = CreateWidget<UHealthWidget>(GetWorld(), HealthWidgetClass);
-	if (HealthWidget)
+	MasterWidget = CreateWidget<UMasterWidget>(GetOwningPlayerController(), MasterWidgetClass);
+	if (MasterWidget)
 	{
-		HealthWidget->OnHealthUpdated.AddDynamic(this, &AMyHUD::ShowHealthBar);
-		HealthWidget->AddToViewport();
-		HealthWidget->SetVisibility(ESlateVisibility::Hidden);
+		MasterWidget->AddToViewport();
 	}
+	////HealthWidget = CreateWidget<UHealthWidget>(GetOwningPlayerController(), HealthWidgetClass);
+	//if (HealthWidget)
+	//{
+	//	HealthWidget->OnHealthUpdated.AddDynamic(this, &AMyHUD::ShowHealthBar);
+	//}
+	////AmmoWidget = CreateWidget<UAmmoCountWidget>(GetOwningPlayerController(), AmmoCountWidgetClass);
+	//if (AmmoWidget)
+	//{
+	//	AmmoWidget->OnAmmoChanged.AddDynamic(this, &AMyHUD::ShowAmmo);
+	//}
+	///*EnemyCountWidget = CreateWidget<UEnemyAmount>(GetOwningPlayerController(), EnemyCountWidgetClass);*/
+	//if (EnemyCountWidget)
+	//{
+	//	EnemyCountWidget->OnEnemyCountChanged.AddDynamic(this, &AMyHUD::ShowEnemyCount);
+
+	//}
 }
 
 void AMyHUD::ShowLoseScreen()
@@ -83,41 +99,67 @@ void AMyHUD::HideStartScreen()
 	}
 }
 
-void AMyHUD::ShowHealthBar(AActor* DamagedActor, float CurrentHealth)
-{
-	if (HealthWidget)
-	{
-		HealthWidget->SetVisibility(ESlateVisibility::Visible);
-		UE_LOG(LogTemp, Warning, TEXT("ADd to viewport HUD Works"));
-		HideWidgetDelay(ESenderTypes::FromHealthWidget);
-	}
-}
+//void AMyHUD::ShowHealthBar(AActor* DamagedActor, float CurrentHealth)
+//{
+//	if (MasterWidget)
+//	{
+//		MasterWidget->ShowHealthBar(DamagedActor, CurrentHealth);
+//		UE_LOG(LogTemp, Warning, TEXT("ADd to viewport HUD Works"));
+//		HideWidgetDelay(ESenderTypes::FromHealthWidget);
+//	}
+//}
+//
+//void AMyHUD::HideHealthBar()
+//{
+//	if (MasterWidget)
+//	{
+//		MasterWidget->HideHealthBar();
+//	}
+//}
+//
+//void AMyHUD::ShowAmmo(int32 AmmoCount)
+//{
+//	if (MasterWidget)
+//	{
+//		MasterWidget->ShowAmmo(AmmoCount);
+//		HideWidgetDelay(ESenderTypes::FromTank);
+//	}
+//}
+//
+//void AMyHUD::HideAmmo()
+//{
+//	if (MasterWidget)
+//	{
+//		MasterWidget->HideAmmo();
+//	}
+//}
+//
+//void AMyHUD::ShowEnemyCount(int32 NewEnemyCount)
+//{
+//	if (MasterWidget)
+//	{
+//		MasterWidget->ShowEnemyCount(NewEnemyCount);
+//		//HideWidgetDelay(ESenderTypes::FromTank);
+//	}
+//}
+//
+//void AMyHUD::HideEnemyCount()
+//{
+//	if (MasterWidget)
+//	{
+//		MasterWidget->HideEnemyCount();
+//	}
+//}
 
-void AMyHUD::HideHealthBar()
-{
-	if (HealthWidget)
-	{
-		HealthWidget->SetVisibility(ESlateVisibility::Hidden);
-	}
-}
-
-void AMyHUD::ShowAmmo()
-{
-}
-
-void AMyHUD::HideAmmo()
-{
-}
-
-void AMyHUD::HideWidgetDelay(ESenderTypes Type)
-{
-	if (Type == ESenderTypes::FromTank)
-	{
-		GetWorldTimerManager().SetTimer(WidgetDisappearDelay, this, &AMyHUD::HideAmmo, TimeToDissappear, false);
-	}
-	else if (Type == ESenderTypes::FromHealthWidget)
-	{
-		GetWorldTimerManager().SetTimer(WidgetDisappearDelay, this, &AMyHUD::HideHealthBar, TimeToDissappear, false);
-	}
-}
+//void AMyHUD::HideWidgetDelay(ESenderTypes Type)
+//{
+//	if (Type == ESenderTypes::FromTank)
+//	{
+//		GetWorldTimerManager().SetTimer(WidgetDisappearDelay, this, &AMyHUD::HideAmmo, TimeToDissappear, false);
+//	}
+//	else if (Type == ESenderTypes::FromHealthWidget)
+//	{
+//		GetWorldTimerManager().SetTimer(WidgetDisappearDelay, this, &AMyHUD::HideHealthBar, TimeToDissappear, false);
+//	}
+//}
 
