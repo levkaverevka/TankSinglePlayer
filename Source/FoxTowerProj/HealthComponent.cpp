@@ -2,7 +2,6 @@
 
 
 #include "HealthComponent.h"
-#include "MyGameState.h"
 // Sets default values for this component's properties
 UHealthComponent::UHealthComponent()
 {
@@ -22,8 +21,9 @@ void UHealthComponent::BeginPlay()
 void UHealthComponent::HandleDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
 	if (Damage <= 0.f) return;
-
+	
 	CurrentHealth -= Damage;
+	OnDamage.Broadcast(DamagedActor, CurrentHealth);
 	if (CurrentHealth <= 0.f)
 	{
 		CurrentHealth = 0.f;

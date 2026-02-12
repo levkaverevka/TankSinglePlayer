@@ -43,8 +43,6 @@ public:
 	}
 protected:
 	virtual void BeginPlay() override;
-	void RotateFunction(const FRotator& LookAtRotation, float DeltaTime, float InterpSpeed);
-	void SpawnProjectile();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UCapsuleComponent> CapsuleComponent;
@@ -87,6 +85,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SFX")
 	USoundBase* DeathSound;
+
+	UFUNCTION()
+	void RotateFunction(const FRotator& LookAtRotation, float DeltaTime, float InterpSpeed);
+
+	UFUNCTION()
+	void SpawnProjectile();
 
 	UFUNCTION()
 	static TArray<FName> GetMaterialSlotOptions();

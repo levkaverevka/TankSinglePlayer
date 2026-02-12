@@ -12,6 +12,9 @@
 #include "NiagaraComponent.h"
 #include "NiagaraSystem.h"
 #include "Components/AudioComponent.h"
+#include <Kismet/KismetSystemLibrary.h>
+#include "Kismet/GameplayStatics.h"
+
 
 
 ATankPawn::ATankPawn()
@@ -121,7 +124,19 @@ void ATankPawn::Turn(const FInputActionValue& Value)
 
 void ATankPawn::TankFire(const FInputActionValue& Value)
 {
-	ATurretPawn::Fire();
+	UE_LOG(LogTemp, Error, TEXT("=== TANKFIRE WORKS ==="));
+	if (AmmoCount > 0)
+	{
+		ATurretPawn::Fire();
+		UE_LOG(LogTemp, Warning, TEXT("Ammo count is: %d"), AmmoCount);
+		AmmoCount --;
+		OnTankFired.Broadcast(AmmoCount);
+		if (AmmoCount == 0)
+		{
+			TankReload();
+		}
+	}
+	
 }
 
 void ATankPawn::LookAtCursor()
@@ -145,6 +160,16 @@ void ATankPawn::LookAtCursor()
 	
 }
 
+void ATankPawn::TankReload()
+{
+	if (!bIsReloading)
+	{
+		bIsReloading = true;
+		UGameplayStatics::PlaySound2D(this, ReloadSound);
+		GetWorldTimerManager().SetTimer(ReloadTimer, [this]() {AmmoCount += 20; bIsReloading = false; }, ReloadTime, false);
+	}
+}
+
 void ATankPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super:: SetupPlayerInputComponent(PlayerInputComponent);
@@ -154,7 +179,7 @@ void ATankPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATankPawn::Move);
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Completed, this, &ATankPawn::OnMoveReleased);
 		EnhancedInputComponent->BindAction(TurnAction, ETriggerEvent::Triggered, this, &ATankPawn::Turn);
-		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &ATankPawn::Fire);
+		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &ATankPawn::TankFire);
 	}
 	else
 	{

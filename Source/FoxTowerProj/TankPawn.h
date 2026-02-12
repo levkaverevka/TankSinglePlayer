@@ -14,9 +14,9 @@ class UInputAction;
 class UInputComponent;
 class UNiagaraComponent;
 class UAudioComponent;
-/**
- * 
- */
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTankFired, int32, AmmoCount);
+
 UCLASS()
 class FOXTOWERPROJ_API ATankPawn : public ATurretPawn
 {
@@ -25,6 +25,9 @@ class FOXTOWERPROJ_API ATankPawn : public ATurretPawn
 public:
 
 	ATankPawn();
+
+	UPROPERTY(BlueprintAssignable, Category = "Ammo")
+	FOnTankFired OnTankFired;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void Tick(float DeltaTime);
@@ -39,6 +42,8 @@ protected:
 	void TankFire(const FInputActionValue& Value);
 	void LookAtCursor();
 
+	UFUNCTION()
+	void TankReload();
 
 	float MoveValue = 0.f;
 	FVector ForwardMove = FVector::ZeroVector;
@@ -79,10 +84,24 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Speed")
 	float RotationSpeed;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ammo")
+	int AmmoCount = 10;
+
+	bool bIsReloading = false;
+
+	UPROPERTY()
+	float ReloadTime = 2.f;
+
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "SFX")
 	UAudioComponent* MoveSfxComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SFX")
 	USoundBase* MoveSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SFX")
+	USoundBase* ReloadSound;
+
+	UPROPERTY()
+	FTimerHandle ReloadTimer;
 
 };

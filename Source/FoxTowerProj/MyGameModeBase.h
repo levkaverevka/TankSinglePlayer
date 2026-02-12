@@ -8,6 +8,7 @@
 
 class UHealthComponent;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUpdateEnemyCount, int, EnemyCount);
 UCLASS()
 class FOXTOWERPROJ_API AMyGameModeBase : public AGameModeBase
 {
@@ -20,6 +21,18 @@ class FOXTOWERPROJ_API AMyGameModeBase : public AGameModeBase
 		FSimpleMulticastDelegate OnRestart;
 		FSimpleMulticastDelegate OnGameStart;
 
+		UPROPERTY(BlueprintAssignable)
+		FOnUpdateEnemyCount OnUpdateEnemyCount;
+
+		UFUNCTION(BlueprintPure)
+		int GetEnemyCount()
+		{
+			return EnemyCount;
+		}
+
+		UFUNCTION()
+		void UpdateEnemyCount(int NewEnemyCount);
+
 		UFUNCTION()
 		void  AddEnemyCount();
 		UFUNCTION()
@@ -29,8 +42,6 @@ class FOXTOWERPROJ_API AMyGameModeBase : public AGameModeBase
 		float TimeToStart = 3.f;
 	protected:
 		virtual void BeginPlay() override;
-
-		int EnemyCount = 0;
 
 		UPROPERTY()
 		UHealthComponent* HealthComponent;
@@ -46,4 +57,7 @@ class FOXTOWERPROJ_API AMyGameModeBase : public AGameModeBase
 
 	private:
 		FTimerHandle StartDelayTimer;
+
+		UPROPERTY()
+		int EnemyCount = 0;
 };

@@ -11,6 +11,7 @@ void AMyGameModeBase::BeginPlay()
 {
     Super::BeginPlay();
 
+    UpdateEnemyCount(EnemyCount);
     GetWorldTimerManager().SetTimer(StartDelayTimer, this,&AMyGameModeBase::GameStart, TimeToStart, false);
     if (APlayerController* PC = GetWorld()->GetFirstPlayerController())
     {
@@ -30,9 +31,15 @@ void AMyGameModeBase::PlayerIsDead(AActor* DeadActor, UHealthComponent* HealthCo
     OnLoseGame.Broadcast();
 }
 
+void AMyGameModeBase::UpdateEnemyCount(int NewEnemyCount)
+{
+    OnUpdateEnemyCount.Broadcast(NewEnemyCount);
+}
+
 void  AMyGameModeBase::AddEnemyCount()
 {
     EnemyCount++;;
+    UpdateEnemyCount(EnemyCount);
     UE_LOG(LogTemp, Warning, TEXT("Enemy count: %d"), EnemyCount);
 }
 
@@ -41,6 +48,7 @@ void AMyGameModeBase::DecreaseEnemyCount()
     if (EnemyCount != 0)
     {
         EnemyCount--;;
+        UpdateEnemyCount(EnemyCount);
         UE_LOG(LogTemp, Warning, TEXT("Enemy count: %d"), EnemyCount);
         if (EnemyCount == 0)
         {
