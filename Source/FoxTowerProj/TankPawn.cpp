@@ -154,7 +154,7 @@ void ATankPawn::LookAtCursor()
 			FRotator LookAtRotation = Direction.Rotation() - GetActorRotation();
 			RotateFunction(LookAtRotation, DeltaTime, 5.f);
 			DrawDebugSphere(GetWorld(), HitLocation, 20.f, 12, FColor::Red, false, -1.f, 0, 2.f);
-			//UE_LOG(LogTemp, Display, TEXT("Hit Point i %s"), *HitLocation.ToString());
+			//UE_LOG(LogTemp, Display, TEXT("Hit Point i %s"), *HitLocation.ToString());'
 		}
 	}
 	
