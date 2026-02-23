@@ -88,28 +88,31 @@ void ATankPawn::OnMoveReleased(const FInputActionValue& Value)
 
 void ATankPawn::MoveActor()
 {
+	if (bIsOnGround())
+	{
+		float DeltaTime = GetWorld()->GetDeltaSeconds();
+		TargetSpeed = MoveValue * MoveSpeed;
+		float InterpSpeed = (FMath::Abs(CurrentSpeed) < FMath::Abs(TargetSpeed)) ? AccelerationSpeed : DecelerationSpeed;
+		CurrentSpeed = FMath::FInterpTo(CurrentSpeed, TargetSpeed, DeltaTime, InterpSpeed);
+		ForwardMove = FVector(CurrentSpeed * DeltaTime, 0.f, 0.f);
+		AddActorLocalOffset(ForwardMove, false);
+		if (CurrentSpeed != 0)
+		{
+			if (!DustFX->IsActive())
+			{
+				DustFX->Activate();
+
+			}
+		}
+		else
+		{
+			DustFX->Deactivate();
+			MoveSfxComponent->Stop();
+		}
+	}
 	if (!MoveSfxComponent->IsPlaying() && CurrentSpeed > 0)
 	{
 		MoveSfxComponent->Play();
-	}
-	float DeltaTime = GetWorld()->GetDeltaSeconds();
-	TargetSpeed = MoveValue * MoveSpeed;
-	float InterpSpeed = (FMath::Abs(CurrentSpeed) < FMath::Abs(TargetSpeed)) ? AccelerationSpeed : DecelerationSpeed;
-	CurrentSpeed = FMath::FInterpTo(CurrentSpeed, TargetSpeed, DeltaTime, InterpSpeed);
-	ForwardMove = FVector(CurrentSpeed * DeltaTime, 0.f, 0.f);
-	AddActorLocalOffset(ForwardMove, false);
-	if (CurrentSpeed != 0)
-	{
-		if (!DustFX->IsActive())
-		{
-			DustFX->Activate();
-			
-		}
-	}
-	else
-	{
-		DustFX->Deactivate();
-		MoveSfxComponent->Stop();
 	}
 }
 
@@ -168,6 +171,15 @@ void ATankPawn::TankReload()
 		UGameplayStatics::PlaySound2D(this, ReloadSound);
 		GetWorldTimerManager().SetTimer(ReloadTimer, [this]() {AmmoCount += 20; bIsReloading = false; }, ReloadTime, false);
 	}
+}
+
+bool ATankPawn::bIsOnGround()
+{
+	FHitResult Hit;
+	FVector StartLocation = GetActorLocation();
+	FVector EndLocation = StartLocation - FVector(0.f, 0.f, 5.f);
+	DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Green, false, 0.f, 0, 2.f);
+	return GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, EndLocation, ECC_Visibility);
 }
 
 void ATankPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

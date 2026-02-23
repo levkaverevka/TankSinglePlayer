@@ -45,6 +45,9 @@ protected:
 	UFUNCTION()
 	void TankReload();
 
+	UFUNCTION()
+	bool bIsOnGround();
+
 	float MoveValue = 0.f;
 	FVector ForwardMove = FVector::ZeroVector;
 	float CurrentSpeed = 0.f;
