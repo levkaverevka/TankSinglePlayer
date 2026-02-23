@@ -1,71 +1,57 @@
-# Ignore user-specific files
-.vscode/
-*.VC.db
-*.VC.opendb
-*.suo
-*.user
-*.userosscache
-*.sdf
-*.opensdf
-*.log
-*.tlog
-*.pdb
-
-# Ignore compiled assets
-=======
-# UE-specific
+# ==============================
+# Unreal Engine generated folders
+# ==============================
 Binaries/
 DerivedDataCache/
 Intermediate/
 Saved/
+
+# Visual Studio / IDE
 .vs/
 .vscode/
-*.sln
-*.VC.db
-*.opensdf
-*.log
-*.vsconfig
-# Ignore built data
+.idea/
+
+# ==============================
+# Build / compiled files
+# ==============================
 *.pdb
 *.obj
 *.exe
 *.dll
 *.app
 *.dylib
-*.icns
-*.ico
+*.suo
+*.user
+*.opensdf
+*.VC.db
+*.log
+*.tlog
 
-# Ignore macOS / Linux system files
-.DS_Store
-.idea/
-*.iml
-
-# Ignore Unreal-generated project files
-*.xcodeproj
-*.xcworkspace
-*.xcconfig
-*.sln
-
-# Ignore auto-generated files
+# ==============================
+# Unreal auto-generated files
+# ==============================
 *.generated.*
 *.gen.cpp
 *.gen.h
 
-# Ignore build tools output
-.vs/
-.vscode/
+# Lighting / baked data (VERY LARGE)
+*_BuiltData.uasset
 
-
-# Ignore compiled shaders and temporary engine files
-/Intermediate/
-/Saved/
-/DerivedDataCache/
-
-=======
-
-# Optional
+# ==============================
+# OS junk
+# ==============================
 .DS_Store
 Thumbs.db
-.vs/
-.idea/
-.vsconfig/
+
+# ==============================
+# Xcode / Mac (safe to ignore on Windows)
+# ==============================
+*.xcodeproj
+*.xcworkspace
+*.xcconfig
+
+# ==============================
+# LARGE ASSETS YOU DON'T WANT IN GIT
+# ==============================
+Content/Realistic_MossyRock/Texture/Mossy_Rock_Base_Color.uasset
+Content/Realistic_MossyRock/Texture/Mossy_Rock_Normal.uasset
