@@ -1,35 +1,43 @@
-# ==============================
+# ======================================
 # Unreal Engine generated folders
-# ==============================
+# ======================================
 Binaries/
 DerivedDataCache/
 Intermediate/
 Saved/
 
-# Visual Studio / IDE
+# ======================================
+# Visual Studio / IDE (LOCAL FILES)
+# ======================================
 .vs/
 .vscode/
 .idea/
 
-# ==============================
+*.sln
+*.vsconfig
+*.VC.db
+*.VC.opendb
+*.opensdf
+*.sdf
+*.suo
+*.user
+*.userosscache
+
+# ======================================
 # Build / compiled files
-# ==============================
+# ======================================
 *.pdb
 *.obj
 *.exe
 *.dll
 *.app
 *.dylib
-*.suo
-*.user
-*.opensdf
-*.VC.db
 *.log
 *.tlog
 
-# ==============================
+# ======================================
 # Unreal auto-generated files
-# ==============================
+# ======================================
 *.generated.*
 *.gen.cpp
 *.gen.h
@@ -37,21 +45,23 @@ Saved/
 # Lighting / baked data (VERY LARGE)
 *_BuiltData.uasset
 
-# ==============================
+# ======================================
 # OS junk
-# ==============================
+# ======================================
 .DS_Store
 Thumbs.db
 
-# ==============================
-# Xcode / Mac (safe to ignore on Windows)
-# ==============================
+# ======================================
+# Apple / Xcode
+# ======================================
 *.xcodeproj
 *.xcworkspace
 *.xcconfig
+*.icns
+*.ico
 
-# ==============================
-# LARGE ASSETS YOU DON'T WANT IN GIT
-# ==============================
+# ======================================
+# Large assets you don't want in Git
+# ======================================
 Content/Realistic_MossyRock/Texture/Mossy_Rock_Base_Color.uasset
 Content/Realistic_MossyRock/Texture/Mossy_Rock_Normal.uasset
