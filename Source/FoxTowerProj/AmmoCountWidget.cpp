@@ -7,11 +7,6 @@
 #include "MyPlayerController.h"
 
 
-void UAmmoCountWidget::NativeConstruct()
-{
-
-}
-
 void UAmmoCountWidget::NativeDestruct()
 {
 	Super::NativeDestruct();

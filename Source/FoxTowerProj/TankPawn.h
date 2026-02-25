@@ -15,6 +15,8 @@ class UInputComponent;
 class UNiagaraComponent;
 class UAudioComponent;
 
+DECLARE_LOG_CATEGORY_EXTERN(TankInfo, Warning, All);
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTankFired, int32, AmmoCount);
 
 UCLASS()
@@ -46,7 +48,7 @@ protected:
 	void TankReload();
 
 	UFUNCTION()
-	bool bIsOnGround();
+	bool IsOnGround();
 
 	float MoveValue = 0.f;
 	FVector ForwardMove = FVector::ZeroVector;

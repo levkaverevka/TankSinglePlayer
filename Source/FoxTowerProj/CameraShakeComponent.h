@@ -12,6 +12,8 @@ class ATurretPawn;
 class UHealthComponent;
 class AMyPlayerController;
 
+DECLARE_LOG_CATEGORY_EXTERN(ShakeInfo, Log, All);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class FOXTOWERPROJ_API UCameraShakeComponent : public UActorComponent
 {

@@ -36,7 +36,6 @@ void ATowerPawn::OnSeePawn(APawn* OtherPawn)
 	GetWorldTimerManager().SetTimer(NullPawnTimer, this, &ATowerPawn::NullPawn, 1.f, false);
 
 	GetWorldTimerManager().SetTimer(FireTimer, this, &ATurretPawn::Fire, FireInterval, true);
-	//UE_LOG(LogTemp, Warning, TEXT("I SEE SOMEONE! %s"), *OtherPawn->GetName());
 }
 
 void ATowerPawn::NullPawn()

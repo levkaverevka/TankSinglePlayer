@@ -23,6 +23,7 @@ void AMyPlayerController::SetPlayerEnableState(bool bEnableState)
 		bShowMouseCursor = true;
 		bEnableClickEvents = true;
 		bEnableMouseOverEvents = true;
+
 	}
 }
 

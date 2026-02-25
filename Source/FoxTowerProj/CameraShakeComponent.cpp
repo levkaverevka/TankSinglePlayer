@@ -11,6 +11,8 @@
 #include "MyGameState.h"
 
 
+DEFINE_LOG_CATEGORY(ShakeInfo);
+
 // Sets default values for this component's properties
 UCameraShakeComponent::UCameraShakeComponent()
 {
@@ -34,7 +36,7 @@ void UCameraShakeComponent::BeginPlay()
 		if (ATurretPawn* TurretPawn = Cast<ATurretPawn>(PC->GetPawn()))
 		{
 			TurretPawn->OnProjectileFired.AddDynamic(this, &UCameraShakeComponent::ShootShake);
-			UE_LOG(LogTemp, Warning, TEXT("PC: %s, TurretPawn: %s"), PC ? TEXT("Valid") : TEXT("NULL"), TurretPawn ? TEXT("Valid") : TEXT("NULL"))
+			UE_LOG(ShakeInfo, Log, TEXT("PC: %s, TurretPawn: %s"), PC ? TEXT("Valid") : TEXT("NULL"), TurretPawn ? TEXT("Valid") : TEXT("NULL"))
 		}
 	}
 	if (AMyGameState* GameState = GetWorld()->GetGameState<AMyGameState>())
@@ -47,7 +49,7 @@ void UCameraShakeComponent::BeginPlay()
 void UCameraShakeComponent::ShootShake(AProjectile* Projectile, ATurretPawn* Owner)
 {
 	UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->StartCameraShake(OnShootShakeClass);
-	UE_LOG(LogTemp, Warning, TEXT("ShootShake called, Class: %s"), OnShootShakeClass ? TEXT("Valid") : TEXT("NULL"));
+	UE_LOG(ShakeInfo, Log, TEXT("ShootShake called, Class: %s"), OnShootShakeClass ? TEXT("Valid") : TEXT("NULL"));
 }
 
 void UCameraShakeComponent::DeathShake(AActor* DeadActor)
@@ -55,7 +57,7 @@ void UCameraShakeComponent::DeathShake(AActor* DeadActor)
 	if (PC)
 	{
 		PC->ClientStartCameraShake(OnAnyDeathClass);
-		UE_LOG(LogTemp, Warning, TEXT("OnAnyDeathClass called, Class: %s"), OnAnyDeathClass ? TEXT("Valid") : TEXT("NULL"));
+		UE_LOG(ShakeInfo, Log, TEXT("OnAnyDeathClass called, Class: %s"), OnAnyDeathClass ? TEXT("Valid") : TEXT("NULL"));
 	}
 }
 

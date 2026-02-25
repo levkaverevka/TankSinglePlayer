@@ -15,7 +15,7 @@
 #include <Kismet/KismetSystemLibrary.h>
 #include "Kismet/GameplayStatics.h"
 
-
+DEFINE_LOG_CATEGORY(TankInfo);
 
 ATankPawn::ATankPawn()
 {
@@ -49,7 +49,7 @@ void ATankPawn::BeginPlay()
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("tank is missing UEnhancedInputLocalPlayerSubsystem !"));
+			UE_LOG(TankInfo, Warning, TEXT("tank is missing UEnhancedInputLocalPlayerSubsystem !"));
 		}
 		//mouse coursor
 		PlayerController->bShowMouseCursor = true;
@@ -58,7 +58,7 @@ void ATankPawn::BeginPlay()
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("tank has no controller!"));
+		UE_LOG(TankInfo, Warning, TEXT("tank has no controller!"));
 	}
 }
 
@@ -88,7 +88,7 @@ void ATankPawn::OnMoveReleased(const FInputActionValue& Value)
 
 void ATankPawn::MoveActor()
 {
-	if (bIsOnGround())
+	if (IsOnGround())
 	{
 		float DeltaTime = GetWorld()->GetDeltaSeconds();
 		TargetSpeed = MoveValue * MoveSpeed;
@@ -122,16 +122,15 @@ void ATankPawn::Turn(const FInputActionValue& Value)
 	float DeltaTime = GetWorld()->GetDeltaSeconds();
 	FRotator Rotation = FRotator(0.f, TurnValue * RotationSpeed * DeltaTime, 0.f);
 	AddActorLocalRotation(Rotation,false);
-	//UE_LOG(LogTemp, Warning, TEXT("TurnValue %f"), TurnValue);
 }
 
 void ATankPawn::TankFire(const FInputActionValue& Value)
 {
-	UE_LOG(LogTemp, Error, TEXT("=== TANKFIRE WORKS ==="));
+	UE_LOG(TankInfo, Log, TEXT("=== TANKFIRE WORKS ==="));
 	if (AmmoCount > 0)
 	{
 		ATurretPawn::Fire();
-		UE_LOG(LogTemp, Warning, TEXT("Ammo count is: %d"), AmmoCount);
+		UE_LOG(TankInfo, Log, TEXT("Ammo count is: %d"), AmmoCount);
 		AmmoCount --;
 		OnTankFired.Broadcast(AmmoCount);
 		if (AmmoCount == 0)
@@ -157,7 +156,6 @@ void ATankPawn::LookAtCursor()
 			FRotator LookAtRotation = Direction.Rotation() - GetActorRotation();
 			RotateFunction(LookAtRotation, DeltaTime, 5.f);
 			DrawDebugSphere(GetWorld(), HitLocation, 20.f, 12, FColor::Red, false, -1.f, 0, 2.f);
-			//UE_LOG(LogTemp, Display, TEXT("Hit Point i %s"), *HitLocation.ToString());'
 		}
 	}
 	
@@ -173,7 +171,7 @@ void ATankPawn::TankReload()
 	}
 }
 
-bool ATankPawn::bIsOnGround()
+bool ATankPawn::IsOnGround()
 {
 	FHitResult Hit;
 	FVector StartLocation = GetActorLocation();
@@ -195,7 +193,7 @@ void ATankPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("EnhancedInputComponent is missing"))
+		UE_LOG(TankInfo, Warning, TEXT("EnhancedInputComponent is missing"))
 	}
 }
 

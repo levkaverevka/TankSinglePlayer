@@ -6,6 +6,7 @@
 #include "HealthComponent.h"
 #include "Kismet/GameplayStatics.h"
 
+DEFINE_LOG_CATEGORY(GMInfo);
 
 void AMyGameModeBase::BeginPlay()
 {

@@ -35,15 +35,6 @@ class FOXTOWERPROJ_API AMyHUD : public AHUD
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 		TSubclassOf<UUserWidget> StartWidgetClass;
 
-	/*	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-		TSubclassOf<UUserWidget> HealthWidgetClass;
-
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-		TSubclassOf<UUserWidget> AmmoCountWidgetClass;
-
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-		TSubclassOf<UUserWidget> EnemyCountWidgetClass;*/
-
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 		TSubclassOf<UUserWidget> MasterWidgetClass;
 
@@ -67,27 +58,6 @@ class FOXTOWERPROJ_API AMyHUD : public AHUD
 
 		UFUNCTION(BlueprintCallable)
 		void HideStartScreen();
-
-	/*	UFUNCTION(BlueprintCallable)
-		void ShowHealthBar(AActor* DamagedActor, float CurrentHealth);
-
-		UFUNCTION(BlueprintCallable)
-		void HideHealthBar();
-
-		UFUNCTION(BlueprintCallable)
-		void ShowAmmo(int32 AmmoCount);
-
-		UFUNCTION(BlueprintCallable)
-		void HideAmmo();
-
-		UFUNCTION(BlueprintCallable)
-		void ShowEnemyCount(int32 NewEnemyCount);
-
-		UFUNCTION(BlueprintCallable)
-		void HideEnemyCount();*/
-
-		/*UFUNCTION(BlueprintCallable)
-		void HideWidgetDelay(ESenderTypes Type);*/
 
 	private:
 		UPROPERTY()

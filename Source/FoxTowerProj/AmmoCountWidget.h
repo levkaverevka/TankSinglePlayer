@@ -23,7 +23,6 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* CurrentAmmo;
 
-	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 	virtual void NativeOnInitialized();
 
