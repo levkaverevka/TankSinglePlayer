@@ -42,7 +42,11 @@ protected:
 	void MoveActor();
 	void Turn(const FInputActionValue& Value);
 	void TankFire(const FInputActionValue& Value);
+	void Look(const FInputActionValue& Value);
 	void LookAtCursor();
+
+	UFUNCTION()
+	void RotateBarrelFunction(const FRotator& LookAtRotation, float DeltaTime, float InterpSpeed);
 
 	UFUNCTION()
 	void TankReload();
@@ -55,6 +59,9 @@ protected:
 	float CurrentSpeed = 0.f;
 	float TargetSpeed = 0.f;
 	FRotator InterpolatedRotation;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<UStaticMeshComponent> BarrelMesh;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<USpringArmComponent> SpringArm;
@@ -70,6 +77,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* MoveAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* LookAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* TurnAction;

@@ -87,7 +87,7 @@ protected:
 	USoundBase* DeathSound;
 
 	UFUNCTION()
-	void RotateFunction(const FRotator& LookAtRotation, float DeltaTime, float InterpSpeed);
+	void RotateTurretFunction(const FRotator& LookAtRotation, float DeltaTime, float InterpSpeed);
 
 	UFUNCTION()
 	void SpawnProjectile();

@@ -71,7 +71,7 @@ void ATowerPawn::Tick(float DeltaTime)
 		float TimeToHit = Distance / ProjSpeed;
 		FVector PredictedLocation = TargetLocation + TargetVelocity * TimeToHit * 10.f;
 		FRotator PredictedRotation = (PredictedLocation - MuzlleLocation).Rotation();
-		RotateFunction(PredictedRotation, DeltaTime, 100.f);
+		RotateTurretFunction(PredictedRotation, DeltaTime, 100.f);
 	}
 
 }

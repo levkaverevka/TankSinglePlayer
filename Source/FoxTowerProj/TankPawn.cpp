@@ -21,14 +21,22 @@ ATankPawn::ATankPawn()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
-	SpringArm->SetupAttachment(BaseMesh);
+	SpringArm->SetupAttachment(RootComponent);
+	SpringArm->bUsePawnControlRotation = true;
+
+	BarrelMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Turret Barrel"));
+	BarrelMesh->SetupAttachment(TurretMesh);
+
+	ProjectileSpawnComponent->SetupAttachment(BarrelMesh);
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
+	Camera->bUsePawnControlRotation = false;
 
 	DustFX = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Dust Spawn Component"));
 	DustFX->SetupAttachment(CapsuleComponent);
 	DustFX->SetAutoActivate(false);
+	bUseControllerRotationYaw = false;
 
 	MoveSfxComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("Movement sound"));
 	MoveSfxComponent->SetupAttachment(ProjectileSpawnComponent);
@@ -73,7 +81,7 @@ void ATankPawn::Tick(float DeltaTime)
 
 	DrawDebugLine(GetWorld(), Location, Location + Forward * 2200, FColor::Emerald, false, -1.f, 0, 2.f);
 	DrawDebugCoordinateSystem(GetWorld(), GetActorLocation(), GetActorRotation(), 200.f, false, 0.f, 0, 2.f);
-	LookAtCursor();
+	/*LookAtCursor();*/
 }
 
 void ATankPawn::Move(const FInputActionValue& Value)
@@ -141,6 +149,15 @@ void ATankPawn::TankFire(const FInputActionValue& Value)
 	
 }
 
+void ATankPawn::Look(const FInputActionValue& Value)
+{
+	UE_LOG(LogTemp, Warning, TEXT("LOOK WORKS"));
+	FVector2D LookAxis = Value.Get<FVector2D>();
+
+	AddControllerYawInput(LookAxis.X);
+	AddControllerPitchInput(LookAxis.Y);
+}
+
 void ATankPawn::LookAtCursor()
 {
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
@@ -152,13 +169,23 @@ void ATankPawn::LookAtCursor()
 		FVector HitLocation = HitResult.ImpactPoint;
 		if (HitLocation != FVector(0.f, 0.f, 0.f))
 		{
-			FVector Direction = HitLocation - TurretMesh->GetComponentLocation();
-			FRotator LookAtRotation = Direction.Rotation() - GetActorRotation();
-			RotateFunction(LookAtRotation, DeltaTime, 5.f);
+			FVector TurretLocalDirection = TurretMesh->GetComponentTransform().InverseTransformPosition(HitLocation);
+			FRotator LookAtTurretRotation = TurretLocalDirection.Rotation();
+			FVector BarrelLocalDirection = TurretMesh->GetComponentTransform().InverseTransformPosition(HitLocation);
+			FRotator LookAtBarrelRotation = BarrelLocalDirection.Rotation();
+			RotateTurretFunction(LookAtTurretRotation, DeltaTime, 5.f);
+			RotateBarrelFunction(LookAtBarrelRotation, DeltaTime, 5.f);
 			DrawDebugSphere(GetWorld(), HitLocation, 20.f, 12, FColor::Red, false, -1.f, 0, 2.f);
 		}
 	}
 	
+}
+
+void ATankPawn::RotateBarrelFunction(const FRotator& LookAtRotation, float DeltaTime, float InterpSpeed)
+{
+	FRotator BarrelRotation = FRotator(LookAtRotation.Pitch, -180.f, 0.f);
+	FRotator InterpolatedBarrelRotation = FMath::RInterpTo(BarrelMesh->GetRelativeRotation(), BarrelRotation, DeltaTime, InterpSpeed);
+	BarrelMesh->SetRelativeRotation(InterpolatedBarrelRotation);
 }
 
 void ATankPawn::TankReload()
@@ -186,6 +213,7 @@ void ATankPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ATankPawn::Look);
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATankPawn::Move);
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Completed, this, &ATankPawn::OnMoveReleased);
 		EnhancedInputComponent->BindAction(TurnAction, ETriggerEvent::Triggered, this, &ATankPawn::Turn);
