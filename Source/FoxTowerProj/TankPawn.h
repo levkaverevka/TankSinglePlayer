@@ -44,6 +44,7 @@ protected:
 	void TankFire(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void LookAtCursor();
+	void Zoom();
 
 	UFUNCTION()
 	void RotateBarrelFunction(const FRotator& LookAtRotation, float DeltaTime, float InterpSpeed);
@@ -59,6 +60,7 @@ protected:
 	float CurrentSpeed = 0.f;
 	float TargetSpeed = 0.f;
 	FRotator InterpolatedRotation;
+	bool bZoomed;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UStaticMeshComponent> BarrelMesh;
@@ -87,6 +89,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* FireAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* ZoomAction;
+
+
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float AccelerationSpeed = 5.f; 
 
@@ -106,6 +112,12 @@ protected:
 
 	UPROPERTY()
 	float ReloadTime = 2.f;
+
+	UPROPERTY()
+	float ZoomedFOV = 40.f;
+
+	UPROPERTY()
+	float ZoomedOutFOV = 85.f;
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "SFX")
 	UAudioComponent* MoveSfxComponent;
