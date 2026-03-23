@@ -8,6 +8,8 @@
 
 class UHealthComponent;
 
+DECLARE_LOG_CATEGORY_EXTERN(GMInfo, Warning, All);
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUpdateEnemyCount, int, EnemyCount);
 UCLASS()
 class FOXTOWERPROJ_API AMyGameModeBase : public AGameModeBase

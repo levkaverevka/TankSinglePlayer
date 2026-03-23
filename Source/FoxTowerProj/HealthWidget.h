@@ -9,9 +9,11 @@
 /**
  * 
  */
-
 class UHealthComponent;
 class UProgressBar;
+
+DECLARE_LOG_CATEGORY_EXTERN(HealthWidgetInfo, Log, All);
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthUpdated, AActor*, DamagedActor,float, CurrentHealth);
 
 UCLASS()

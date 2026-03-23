@@ -15,6 +15,8 @@ class UInputComponent;
 class UNiagaraComponent;
 class UAudioComponent;
 
+DECLARE_LOG_CATEGORY_EXTERN(TankInfo, Warning, All);
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTankFired, int32, AmmoCount);
 
 UCLASS()
@@ -40,16 +42,28 @@ protected:
 	void MoveActor();
 	void Turn(const FInputActionValue& Value);
 	void TankFire(const FInputActionValue& Value);
+	void Look(const FInputActionValue& Value);
 	void LookAtCursor();
+	void Zoom();
+
+	UFUNCTION()
+	void RotateBarrelFunction(FRotator& LookAtRotation, float DeltaTime, float InterpSpeed);
 
 	UFUNCTION()
 	void TankReload();
+
+	UFUNCTION()
+	bool IsOnGround();
 
 	float MoveValue = 0.f;
 	FVector ForwardMove = FVector::ZeroVector;
 	float CurrentSpeed = 0.f;
 	float TargetSpeed = 0.f;
 	FRotator InterpolatedRotation;
+	bool bZoomed;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<UStaticMeshComponent> BarrelMesh;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<USpringArmComponent> SpringArm;
@@ -67,10 +81,17 @@ protected:
 	UInputAction* MoveAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* LookAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* TurnAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* FireAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* ZoomAction;
+
 
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float AccelerationSpeed = 5.f; 
@@ -91,6 +112,12 @@ protected:
 
 	UPROPERTY()
 	float ReloadTime = 2.f;
+
+	UPROPERTY()
+	float ZoomedFOV = 40.f;
+
+	UPROPERTY()
+	float ZoomedOutFOV = 85.f;
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "SFX")
 	UAudioComponent* MoveSfxComponent;

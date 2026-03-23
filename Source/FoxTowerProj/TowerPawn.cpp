@@ -36,7 +36,6 @@ void ATowerPawn::OnSeePawn(APawn* OtherPawn)
 	GetWorldTimerManager().SetTimer(NullPawnTimer, this, &ATowerPawn::NullPawn, 1.f, false);
 
 	GetWorldTimerManager().SetTimer(FireTimer, this, &ATurretPawn::Fire, FireInterval, true);
-	//UE_LOG(LogTemp, Warning, TEXT("I SEE SOMEONE! %s"), *OtherPawn->GetName());
 }
 
 void ATowerPawn::NullPawn()
@@ -72,7 +71,7 @@ void ATowerPawn::Tick(float DeltaTime)
 		float TimeToHit = Distance / ProjSpeed;
 		FVector PredictedLocation = TargetLocation + TargetVelocity * TimeToHit * 10.f;
 		FRotator PredictedRotation = (PredictedLocation - MuzlleLocation).Rotation();
-		RotateFunction(PredictedRotation, DeltaTime, 100.f);
+		RotateTurretFunction(PredictedRotation, DeltaTime, 100.f);
 	}
 
 }

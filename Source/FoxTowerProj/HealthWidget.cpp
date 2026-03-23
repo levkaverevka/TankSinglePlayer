@@ -6,6 +6,8 @@
 #include <Components/ProgressBar.h>
 #include "AmmoCountWidget.h"
 
+DEFINE_LOG_CATEGORY(HealthWidgetInfo);
+
 void UHealthWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -34,7 +36,7 @@ void UHealthWidget::NativeOnInitialized()
 		if (HealthComp)
 		{
 			HealthComp->OnDamage.AddDynamic(this, &UHealthWidget::OnHealthChanged);
-			UE_LOG(LogTemp, Warning, TEXT("HealthComp exists"));
+			UE_LOG(HealthWidgetInfo, Log, TEXT("HealthComp exists"));
 		}
 	}
 }
@@ -44,5 +46,5 @@ void UHealthWidget::OnHealthChanged(AActor* DamagedActor,float CurrentHealth)
 	float Percent = CurrentHealth / HealthComp->GetMaxHealth();
 	HealthBar->SetPercent(Percent);
 	OnHealthUpdated.Broadcast(DamagedActor, CurrentHealth);
-	UE_LOG(LogTemp, Warning, TEXT("HealthWidget Broadcasted OnHealthUpdated"));
+	UE_LOG(HealthWidgetInfo, Log, TEXT("HealthWidget Broadcasted OnHealthUpdated"));
 }

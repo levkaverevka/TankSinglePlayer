@@ -69,11 +69,11 @@ void ATurretPawn::OnDeathStarted(AActor* DeadActor, UHealthComponent* HealthComp
 	Destroy();
 }
 
-void ATurretPawn::RotateFunction(const FRotator& PredictedRotation, float DeltaTime, float InterpSpeed)
+void ATurretPawn::RotateTurretFunction(const FRotator& LookAtRotation, float DeltaTime, float InterpSpeed)
 {
-	FRotator TurretRotation = FRotator(0.f, PredictedRotation.Yaw, 0.f);
+	FRotator TurretRotation = FRotator(0.f, LookAtRotation.Yaw, 0.f);
 	FRotator InterpolatedRotation = FMath::RInterpTo(TurretMesh->GetRelativeRotation(), TurretRotation, DeltaTime, InterpSpeed);
-	TurretMesh->SetRelativeRotation(InterpolatedRotation);;
+	TurretMesh->SetRelativeRotation(InterpolatedRotation);
 }
 
 void ATurretPawn::Fire()

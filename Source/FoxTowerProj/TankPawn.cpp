@@ -15,20 +15,28 @@
 #include <Kismet/KismetSystemLibrary.h>
 #include "Kismet/GameplayStatics.h"
 
-
+DEFINE_LOG_CATEGORY(TankInfo);
 
 ATankPawn::ATankPawn()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
-	SpringArm->SetupAttachment(BaseMesh);
+	SpringArm->SetupAttachment(RootComponent);
+	SpringArm->bUsePawnControlRotation = true;
+
+	BarrelMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Turret Barrel"));
+	BarrelMesh->SetupAttachment(TurretMesh);
+
+	ProjectileSpawnComponent->SetupAttachment(BarrelMesh);
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
+	Camera->bUsePawnControlRotation = false;
 
 	DustFX = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Dust Spawn Component"));
 	DustFX->SetupAttachment(CapsuleComponent);
 	DustFX->SetAutoActivate(false);
+	bUseControllerRotationYaw = false;
 
 	MoveSfxComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("Movement sound"));
 	MoveSfxComponent->SetupAttachment(ProjectileSpawnComponent);
@@ -49,7 +57,7 @@ void ATankPawn::BeginPlay()
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("tank is missing UEnhancedInputLocalPlayerSubsystem !"));
+			UE_LOG(TankInfo, Warning, TEXT("tank is missing UEnhancedInputLocalPlayerSubsystem !"));
 		}
 		//mouse coursor
 		PlayerController->bShowMouseCursor = true;
@@ -58,7 +66,7 @@ void ATankPawn::BeginPlay()
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("tank has no controller!"));
+		UE_LOG(TankInfo, Warning, TEXT("tank has no controller!"));
 	}
 }
 
@@ -88,28 +96,31 @@ void ATankPawn::OnMoveReleased(const FInputActionValue& Value)
 
 void ATankPawn::MoveActor()
 {
+	if (IsOnGround())
+	{
+		float DeltaTime = GetWorld()->GetDeltaSeconds();
+		TargetSpeed = MoveValue * MoveSpeed;
+		float InterpSpeed = (FMath::Abs(CurrentSpeed) < FMath::Abs(TargetSpeed)) ? AccelerationSpeed : DecelerationSpeed;
+		CurrentSpeed = FMath::FInterpTo(CurrentSpeed, TargetSpeed, DeltaTime, InterpSpeed);
+		ForwardMove = FVector(CurrentSpeed * DeltaTime, 0.f, 0.f);
+		AddActorLocalOffset(ForwardMove, false);
+		if (CurrentSpeed != 0)
+		{
+			if (!DustFX->IsActive())
+			{
+				DustFX->Activate();
+
+			}
+		}
+		else
+		{
+			DustFX->Deactivate();
+			MoveSfxComponent->Stop();
+		}
+	}
 	if (!MoveSfxComponent->IsPlaying() && CurrentSpeed > 0)
 	{
 		MoveSfxComponent->Play();
-	}
-	float DeltaTime = GetWorld()->GetDeltaSeconds();
-	TargetSpeed = MoveValue * MoveSpeed;
-	float InterpSpeed = (FMath::Abs(CurrentSpeed) < FMath::Abs(TargetSpeed)) ? AccelerationSpeed : DecelerationSpeed;
-	CurrentSpeed = FMath::FInterpTo(CurrentSpeed, TargetSpeed, DeltaTime, InterpSpeed);
-	ForwardMove = FVector(CurrentSpeed * DeltaTime, 0.f, 0.f);
-	AddActorLocalOffset(ForwardMove, false);
-	if (CurrentSpeed != 0)
-	{
-		if (!DustFX->IsActive())
-		{
-			DustFX->Activate();
-			
-		}
-	}
-	else
-	{
-		DustFX->Deactivate();
-		MoveSfxComponent->Stop();
 	}
 }
 
@@ -119,16 +130,15 @@ void ATankPawn::Turn(const FInputActionValue& Value)
 	float DeltaTime = GetWorld()->GetDeltaSeconds();
 	FRotator Rotation = FRotator(0.f, TurnValue * RotationSpeed * DeltaTime, 0.f);
 	AddActorLocalRotation(Rotation,false);
-	//UE_LOG(LogTemp, Warning, TEXT("TurnValue %f"), TurnValue);
 }
 
 void ATankPawn::TankFire(const FInputActionValue& Value)
 {
-	UE_LOG(LogTemp, Error, TEXT("=== TANKFIRE WORKS ==="));
+	UE_LOG(TankInfo, Log, TEXT("=== TANKFIRE WORKS ==="));
 	if (AmmoCount > 0)
 	{
 		ATurretPawn::Fire();
-		UE_LOG(LogTemp, Warning, TEXT("Ammo count is: %d"), AmmoCount);
+		UE_LOG(TankInfo, Log, TEXT("Ammo count is: %d"), AmmoCount);
 		AmmoCount --;
 		OnTankFired.Broadcast(AmmoCount);
 		if (AmmoCount == 0)
@@ -139,6 +149,13 @@ void ATankPawn::TankFire(const FInputActionValue& Value)
 	
 }
 
+void ATankPawn::Look(const FInputActionValue& Value)
+{
+	FVector2D LookAxis = Value.Get<FVector2D>();
+	AddControllerYawInput(LookAxis.X);
+	AddControllerPitchInput(-LookAxis.Y);
+}
+
 void ATankPawn::LookAtCursor()
 {
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
@@ -146,17 +163,48 @@ void ATankPawn::LookAtCursor()
 	{
 		FHitResult HitResult;
 		float DeltaTime = GetWorld()->GetDeltaSeconds();
-		PlayerController->GetHitResultUnderCursor(ECC_Visibility, false, HitResult);
-		FVector HitLocation = HitResult.ImpactPoint;
-		if (HitLocation != FVector(0.f, 0.f, 0.f))
-		{
-			FVector Direction = HitLocation - TurretMesh->GetComponentLocation();
-			FRotator LookAtRotation = Direction.Rotation() - GetActorRotation();
-			RotateFunction(LookAtRotation, DeltaTime, 5.f);
-			DrawDebugSphere(GetWorld(), HitLocation, 20.f, 12, FColor::Red, false, -1.f, 0, 2.f);
-			//UE_LOG(LogTemp, Display, TEXT("Hit Point i %s"), *HitLocation.ToString());
-		}
+		FVector StartPoint = Camera->GetComponentLocation();
+		FVector EndPoint = StartPoint + Camera->GetForwardVector() * 10000.f;
+		FRotator CameraRotation = (EndPoint-StartPoint).Rotation();
+		FRotator TankRotation = GetActorRotation();
+		FRotator TurretDelta = CameraRotation - TankRotation;
+		FVector BarrelLocalDirection = EndPoint - BarrelMesh->GetComponentLocation();
+		FRotator LookAtBarrelRotation = BarrelLocalDirection.Rotation();
+		RotateTurretFunction(TurretDelta, DeltaTime, 5.f);
+		RotateBarrelFunction(LookAtBarrelRotation, DeltaTime, 5.f);
+		DrawDebugSphere(GetWorld(), EndPoint, 20.f, 12, FColor::Red, false, -1.f, 0, 2.f);
 	}
+	
+}
+void ATankPawn::Zoom()
+{
+	UE_LOG(TankInfo, Warning, TEXT("Zoom IS CALLED"));
+	if (!bZoomed)
+	{
+		Camera->SetFieldOfView(ZoomedFOV);
+		bZoomed = true;
+	}
+	else
+	{
+		Camera->SetFieldOfView(ZoomedOutFOV);
+		bZoomed = false;
+	}
+	
+}
+void ATankPawn::RotateBarrelFunction(FRotator& LookAtRotation, float DeltaTime, float InterpSpeed)
+{
+	if (LookAtRotation.Pitch > 25.f)
+	{
+		LookAtRotation.Pitch = 25.f;
+	}
+	else if (LookAtRotation.Pitch < -25.f)
+	{
+		LookAtRotation.Pitch = -25.f;
+	}
+	FRotator BarrelRotation = FRotator(LookAtRotation.Pitch, 0.f, 0.f);
+	FRotator InterpolatedBarrelRotation = FMath::RInterpTo(BarrelMesh->GetRelativeRotation(), BarrelRotation, DeltaTime, InterpSpeed);
+	UE_LOG(TankInfo, Warning, TEXT("Barrel Rotation is: %s"), *InterpolatedBarrelRotation.ToString());
+	BarrelMesh->SetRelativeRotation(InterpolatedBarrelRotation);
 	
 }
 
@@ -170,20 +218,31 @@ void ATankPawn::TankReload()
 	}
 }
 
+bool ATankPawn::IsOnGround()
+{
+	FHitResult Hit;
+	FVector StartLocation = GetActorLocation();
+	FVector EndLocation = StartLocation - FVector(0.f, 0.f, 5.f);
+	DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Green, false, 0.f, 0, 2.f);
+	return GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, EndLocation, ECC_Visibility);
+}
+
 void ATankPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super:: SetupPlayerInputComponent(PlayerInputComponent);
 
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ATankPawn::Look);
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATankPawn::Move);
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Completed, this, &ATankPawn::OnMoveReleased);
 		EnhancedInputComponent->BindAction(TurnAction, ETriggerEvent::Triggered, this, &ATankPawn::Turn);
 		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &ATankPawn::TankFire);
+		EnhancedInputComponent->BindAction(ZoomAction, ETriggerEvent::Triggered, this, &ATankPawn::Zoom);
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("EnhancedInputComponent is missing"))
+		UE_LOG(TankInfo, Warning, TEXT("EnhancedInputComponent is missing"))
 	}
 }
 
