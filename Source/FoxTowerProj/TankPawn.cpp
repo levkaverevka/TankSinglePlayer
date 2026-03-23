@@ -165,11 +165,12 @@ void ATankPawn::LookAtCursor()
 		float DeltaTime = GetWorld()->GetDeltaSeconds();
 		FVector StartPoint = Camera->GetComponentLocation();
 		FVector EndPoint = StartPoint + Camera->GetForwardVector() * 10000.f;
-		FVector TurretLocalDirection = EndPoint - TurretMesh->GetComponentLocation();
-		FRotator LookAtTurretRotation = TurretLocalDirection.Rotation();
+		FRotator CameraRotation = (EndPoint-StartPoint).Rotation();
+		FRotator TankRotation = GetActorRotation();
+		FRotator TurretDelta = CameraRotation - TankRotation;
 		FVector BarrelLocalDirection = EndPoint - BarrelMesh->GetComponentLocation();
 		FRotator LookAtBarrelRotation = BarrelLocalDirection.Rotation();
-		RotateTurretFunction(LookAtTurretRotation, DeltaTime, 5.f);
+		RotateTurretFunction(TurretDelta, DeltaTime, 5.f);
 		RotateBarrelFunction(LookAtBarrelRotation, DeltaTime, 5.f);
 		DrawDebugSphere(GetWorld(), EndPoint, 20.f, 12, FColor::Red, false, -1.f, 0, 2.f);
 	}
@@ -190,11 +191,21 @@ void ATankPawn::Zoom()
 	}
 	
 }
-void ATankPawn::RotateBarrelFunction(const FRotator& LookAtRotation, float DeltaTime, float InterpSpeed)
+void ATankPawn::RotateBarrelFunction(FRotator& LookAtRotation, float DeltaTime, float InterpSpeed)
 {
+	if (LookAtRotation.Pitch > 25.f)
+	{
+		LookAtRotation.Pitch = 25.f;
+	}
+	else if (LookAtRotation.Pitch < -25.f)
+	{
+		LookAtRotation.Pitch = -25.f;
+	}
 	FRotator BarrelRotation = FRotator(LookAtRotation.Pitch, 0.f, 0.f);
 	FRotator InterpolatedBarrelRotation = FMath::RInterpTo(BarrelMesh->GetRelativeRotation(), BarrelRotation, DeltaTime, InterpSpeed);
+	UE_LOG(TankInfo, Warning, TEXT("Barrel Rotation is: %s"), *InterpolatedBarrelRotation.ToString());
 	BarrelMesh->SetRelativeRotation(InterpolatedBarrelRotation);
+	
 }
 
 void ATankPawn::TankReload()

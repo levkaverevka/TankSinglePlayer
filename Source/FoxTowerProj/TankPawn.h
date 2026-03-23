@@ -47,7 +47,7 @@ protected:
 	void Zoom();
 
 	UFUNCTION()
-	void RotateBarrelFunction(const FRotator& LookAtRotation, float DeltaTime, float InterpSpeed);
+	void RotateBarrelFunction(FRotator& LookAtRotation, float DeltaTime, float InterpSpeed);
 
 	UFUNCTION()
 	void TankReload();
